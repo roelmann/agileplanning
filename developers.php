@@ -17,59 +17,85 @@
  *          http://www.gnu.org/copyleft/gpl.html                         *
  *                                                                       *
  *************************************************************************/
-include('includes/head.php');
 
+// Get head and navbar.
+include('includes/head.php');
+echo '<div class="page-wrapper container-fluid page-developers">';
+include('includes/navbar.php');
+
+// Call initial database queries.
 require_once("dbcontroller.php");
-$table = 'developers';
-$db_handle = new DBController();
+$table = 'developers'; // Main table.
+$db_handle = new DBController(); // Set up database connection.
+// Main developers array.
 $sql = "SELECT * from " . $table;
 $dev = $db_handle->runQuery($sql);
-
 ?>
+
+<!-- Header Title -->
 <header class="pageheader jumbotron text-center">
     <h1 class="display-5">Developers</h1>
 </header>
+
+    <!-- Main page content -->
     <div class="main-content">
-       <table class="table table-striped">
-          <thead class="thead-dark">
-              <tr>
-                <th class="table-header" width="10%">ID</th>
-                <th class="table-header">Firstname</th>
-                <th class="table-header">Lastname</th>
-                <th class="table-header">Username</th>
-                <th class="table-header">Icon</th>
+        <table class="table table-striped">
+            <!-- Table header row -->
+            <thead class="thead-dark">
+                <tr>
+                    <th class="table-header" width="10%">ID</th>
+                    <th class="table-header">Firstname</th>
+                    <th class="table-header">Lastname</th>
+                    <th class="table-header">Username</th>
+                    <th class="table-header">Icon</th>
+                </tr>
+            </thead>
+            <!-- Main body of table -->
+            <tbody>
+                <?php
+                foreach($dev as $k=>$v) { // Loop through all developers list.
+                ?>
+                    <tr class="table-row">
+                        <td contenteditable="false">
+                            <?php echo $dev[$k]["id"]; ?> <!-- ID -->
+                        </td>
+                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'firstname','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
+                            <?php echo $dev[$k]["firstname"]; ?> <!-- First name -->
+                        </td>
+                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','lastname','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
+                            <?php echo $dev[$k]["lastname"]; ?> <!-- Last name -->
+                        </td>
+                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','username','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
+                            <?php echo $dev[$k]["username"]; ?> <!-- User name -->
+                        </td>
+                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','icon','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
+                            <?php echo $dev[$k]["icon"]; ?>&nbsp;&nbsp; <!-- Font Awesome icon -->
+                            <i class="fa fa-2x fa-<?php echo $dev[$k]["icon"]; ?>"></i>
+                        </td>
+                    </tr>
+                <?php
+                }
+                ?>
+                <tr> <!-- Spacer row -->
+                    <td colspan=15>
+                        <br><br>
+                    </td>
+                </tr>
+                <!-- New developer form -->
+                <tr>
+                    <th colspan=5>Add a new user</th>
+                </tr>
+                <form action="newdev.php?t=developers" method="post">
+                    <tr class="table-row">
+                        <td><input type="submit" name="submit" value="&#xf0c7;" class="fa"></td>
+                        <td>*<input type="text" name="firstname" value="" /></td>
+                        <td>*<input type="text" name="lastname" value="" /></td>
+                        <td>*<input type="text" name="username" value="" /></td>
+                        <td><input type="text" name="icon" value="" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="submit" value="&#xf0c7;" class="fa"></td>
+                    </tr>
+                </form>
 
-              </tr>
-          </thead>
-          <tbody>
-          <?php
-          foreach($dev as $k=>$v) {
-          ?>
-              <tr class="table-row">
-                <td contenteditable="false"><?php echo $dev[$k]["id"]; ?></td>
-                <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'firstname','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $dev[$k]["firstname"]; ?></td>
-                <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','lastname','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $dev[$k]["lastname"]; ?></td>
-                <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','username','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $dev[$k]["username"]; ?></td>
-                <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','icon','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $dev[$k]["icon"]; ?>&nbsp;&nbsp;<i class="fa fa-2x fa-<?php echo $dev[$k]["icon"]; ?>"></i></td>
-              </tr>
-        <?php
-        }
-        ?>
-        <tr><td colspan=5><br><br></td></tr>
-        <tr>
-            <th colspan=5>Add a new user</th>
-        </tr>
-        <form action="newdev.php?t=developers" method="post">
-            <tr class="table-row">
-                <td><input type="submit" name="submit" value="&#xf0c7;" class="fa"></td>
-                <td>*<input type="text" name="firstname" value="" /></td>
-                <td>*<input type="text" name="lastname" value="" /></td>
-                <td>*<input type="text" name="username" value="" /></td>
-                <td><input type="text" name="icon" value="" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" name="submit" value="&#xf0c7;" class="fa"></td>
-            </tr>
-        </form>
-
-          </tbody>
+            </tbody>
         </table>
     </div>
 <?php

@@ -17,44 +17,61 @@
  *          http://www.gnu.org/copyleft/gpl.html                         *
  *                                                                       *
  *************************************************************************/
-include('includes/head.php');
 
+// Get head and navbar.
+include('includes/head.php');
+echo '<div class="page-wrapper container-fluid page-weeks">';
+include('includes/navbar.php');
+
+// Call initial database queries.
 require_once("dbcontroller.php");
-$table = 'weeks';
-$db_handle = new DBController();
+$table = 'weeks'; // Main table.
+$db_handle = new DBController(); // Set up database connection.
 $sql = "SELECT * from " . $table;
 $dev = $db_handle->runQuery($sql);
-
 ?>
+
+<!-- Header Title -->
 <header class="pageheader jumbotron text-center">
     <h1 class="display-5">Weeks - Sprint number and Events</h1>
 </header>
+
+    <!-- Main page content -->
     <div class="main-content">
-       <table class="table table-striped">
-          <thead class="thead-dark">
-              <tr>
-                <th class="table-header" width="10%">ID</th>
-                <th class="table-header">Week Commencing</th>
-                <th class="table-header">Sprint number</th>
-                <th class="table-header">External Events</th>
-              </tr>
-          </thead>
-          <tbody>
-          <?php
-          foreach($dev as $k=>$v) {
-          ?>
-              <tr class="table-row">
-                <td contenteditable="false"><?php echo $dev[$k]["id"]; ?></td>
-                <td contenteditable="false"><?php echo $dev[$k]["weekcommencing"]; ?></td>
-                <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','sprint','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $dev[$k]["sprint"]; ?></td>
-                <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','events','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $dev[$k]["events"]; ?></td>
-              </tr>
-        <?php
-        }
-        ?>
-          </tbody>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th class="table-header" width="10%">ID</th>
+                    <th class="table-header">Week Commencing</th>
+                    <th class="table-header">Sprint number</th>
+                    <th class="table-header">External Events</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach($dev as $k=>$v) {
+                ?>
+                    <tr class="table-row">
+                        <td contenteditable="false">
+                            <?php echo $dev[$k]["id"]; ?>
+                        </td>
+                        <td contenteditable="false">
+                            <?php echo $dev[$k]["weekcommencing"]; ?>
+                        </td>
+                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','sprint','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
+                            <?php echo $dev[$k]["sprint"]; ?>
+                        </td>
+                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','events','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
+                            <?php echo $dev[$k]["events"]; ?>
+                        </td>
+                    </tr>
+                <?php
+                }
+                ?>
+            </tbody>
         </table>
     </div>
+    <div>Adding new weeks in bulk should be done via the database directly.</div>
 <?php
 include('includes/foot.php');
 ?>

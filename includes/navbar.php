@@ -36,12 +36,19 @@ ini_set("display_errors", 1);
         <a class="nav-link" href="systems.php">Systems</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="epics.php">Epics</a>
+        <a class="nav-link" href="weeks.php">Weeks/Sprints</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="velocity.php">Planned Velocities</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="weeks.php">Weeks/Sprints</a>
+        <a class="nav-link" href="epics.php">Epics</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="backlog.php">Backlog</a>
+      </li>
+
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown

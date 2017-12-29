@@ -20,23 +20,23 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-class DBController {
+class DBController {  // Set Db variables.
     private $host = "localhost";
     private $user = "root";
     private $password = "R0e!m4nn";
     private $database = "agileplan";
     public $conn;
 
-    function __construct() {
+    function __construct() { // Construct Db connection.
         $this->conn = $this->connectDB();
     }
 
-    function connectDB() {
+    function connectDB() { // Open Database.
         $conn = mysqli_connect($this->host,$this->user,$this->password,$this->database);
         return $conn;
     }
 
-    function runQuery($query) {
+    function runQuery($query) { // Run read query.
         $result = mysqli_query($this->conn,$query);
         while($row=mysqli_fetch_assoc($result)) {
             $resultset[] = $row;
@@ -45,13 +45,12 @@ class DBController {
             return $resultset;
     }
 
-    function numRows($query) {
+    function numRows($query) { // Get number of results from query.
         $result = mysqli_query($this->conn,$query);
         $rowcount = mysqli_num_rows($result);
-        echo $rowcount;
         return $rowcount;
     }
-    function executeUpdate($query) {
+    function executeUpdate($query) { // Write query
         $result = mysqli_query($this->conn,$query);
         return $result;
     }

@@ -17,38 +17,52 @@
  *          http://www.gnu.org/copyleft/gpl.html                         *
  *                                                                       *
  *************************************************************************/
-include('includes/head.php');
 
+// Get head and navbar.
+include('includes/head.php');
+echo '<div class="page-wrapper container-fluid page-newsys">';
+include('includes/navbar.php');
+
+// Call initial database queries.
 require_once("dbcontroller.php");
 $table = $_GET['t'];
 
 if (isset($_POST['submit'])) {
     $db_handle = new DBController();
 
-    // get form data, making sure it is valid
+    // Get form data, making sure it is valid.
     $system = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['system']));
     $productowner = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['productowner']));
     $customercontact = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['customercontact']));
     $error = '';
 
-    // check to make sure both fields are entered
+    // Check to make sure both fields are entered.
     if ($system == '') {
-        // generate error message
+        // Generate error message.
         echo '<p class="alert alert-danger">ERROR: Please fill in all required fields!</p>';
         echo '<p class="text-danger">* System: '.$system.'</p>';
         echo '<p>Product Owner: '.$productowner.'</p>';
         echo '<p>Customer Contact: '.$customercontact.'</p>';
         echo '<p class="alert alert-primary">The page will refresh in 10seconds.
                 Or click to <a href="systems.php" class="btn btn-primary">Return to Systems list</a></p>';
-        header('Refresh: 10; url=developers.php');
+        // Redirect back to the view page.
+        ?>
+        <script type="text/javascript">
+            location.replace("systems.php");
+        </script>
+        <?php
 
     } else {
-        // save the data to the database
+        // Save the data to the database.
         $sql = "INSERT " . $table . " SET system='$system', productowner='$productowner', customercontact='$customercontact'";
         $dev = $db_handle->executeUpdate($sql);
 
-        // once saved, redirect back to the view page
-        header('Refresh: 0; url=systems.php');
+        // Once saved, redirect back to the view page.
+        ?>
+        <script type="text/javascript">
+            location.replace("systems.php");
+        </script>
+        <?php
     }
 }
 include('includes/foot.php');

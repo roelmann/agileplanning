@@ -2,3 +2,32 @@ footer {
     background: #fff;
     border-top: solid 1px #222;
 }
+
+i.fa {
+    margin-left:10px;
+    margin-right:10px;
+}
+
+.page-backlog .filteradv input {
+    width:450px;
+}
+.page-backlog .maxwidth32 {
+    width: 32px;
+}
+.page-backlog .maxwidth28 {
+    width: 28px;
+}
+.page-backlog .table-row .maxwidth100 {
+    max-width:100px;
+}
+.page-velocity .table-header {
+    height:85px;
+}
+.page-velocity .weekheader .rotated {
+    height:12px;
+    width:20px;
+    white-space:nowrap;
+    transform: rotate(-45deg);
+    padding:0 15px 0 0;
+}
+

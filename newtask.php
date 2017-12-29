@@ -17,11 +17,13 @@
  *          http://www.gnu.org/copyleft/gpl.html                         *
  *                                                                       *
  *************************************************************************/
-include('includes/head.php');
-?>
-<div class="page-wrapper container-fluid page-newdev">
-    <?php include('includes/navbar.php');
 
+// Get head and navbar.
+include('includes/head.php');
+echo '<div class="page-wrapper container-fluid page-newtask">';
+include('includes/navbar.php');
+
+// Call initial database queries.
 require_once("dbcontroller.php");
 $table = $_GET['t'];
 
@@ -29,38 +31,45 @@ if (isset($_POST['submit'])) {
     $db_handle = new DBController();
 
     // Get form data, making sure it is valid.
-    $firstname = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['firstname']));
-    $lastname = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['lastname']));
-    $username = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['username']));
-    $icon = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['icon']));
+    $type = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['type']));
+    $epicid = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['epicid']));
+    $parent = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['parent']));
+    $title = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['title']));
+    $completion = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['completion']));
+    $description = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['description']));
+    $deadline = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['deadline']));
+    $notes = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['notes']));
+    $MoSCoW = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['MoSCoW']));
+    $Releasability = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['Releasability']));
+    $Risk = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['Risk']));
+    $DependenciesUpstream = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['DependenciesUpstream']));
+    $DependenciesDownstream = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['DependenciesDownstream']));
     $error = '';
 
     // Check to make sure both fields are entered.
-    if ($firstname == '' || $lastname == '' || $username == '') {
+    if ($type == '' || $title == '') {
         // Generate error message.
         echo '<p class="alert alert-danger">ERROR: Please fill in all required fields!</p>';
-        echo '<p class="text-danger">* Firstname: '.$firstname.'</p>';
-        echo '<p class="text-danger">* Lastname: '.$lastname.'</p>';
-        echo '<p class="text-danger">* Username: '.$username.'</p>';
-        echo '<p>icon: '.$icon.'</li>';
+        echo '<p class="text-danger">* Type: '.$type.'</p>';
+        echo '<p class="text-danger">Title: '.$title.'</p>';
         echo '<p class="alert alert-primary">The page will refresh in 10seconds.
-                Or click to <a href="developers.php" class="btn btn-primary">Return to Developers list</a></p>';
+                Or click to <a href="backlog.php" class="btn btn-primary">Return to Backlog list</a></p>';
         // Redirect back to the view page.
         ?>
         <script type="text/javascript">
-            location.replace("developers.php");
+            location.replace("backlog.php");
         </script>
         <?php
 
     } else {
         // Save the data to the database.
-        $sql = "INSERT " . $table . " SET firstname='$firstname', lastname='$lastname', username='$username', icon='$icon'";
+        $sql = "INSERT " . $table . " SET type='$type', epicid='$epicid', parent='$parent', title='$title', completion='$completion', description='$description', deadline='$deadline', notes='$notes', MoSCoW='$MoSCoW', Releasability='$Releasability', Risk='$Risk', DependenciesUpstream='$DependenciesUpstream', DependenciesDownstream='$DependenciesDownstream'";
         $dev = $db_handle->executeUpdate($sql);
 
         // Once saved, redirect back to the view page.
         ?>
         <script type="text/javascript">
-            location.replace("developers.php");
+            location.replace("backlog.php");
         </script>
         <?php
     }
