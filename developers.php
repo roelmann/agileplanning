@@ -60,19 +60,10 @@ $dev = $db_handle->runQuery($sql);
                             <td contenteditable="false">
                                 <?php echo $dev[$k]["id"]; ?> <!-- ID -->
                             </td>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'firstname','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
-                                <?php echo $dev[$k]["firstname"]; ?> <!-- First name -->
-                            </td>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','lastname','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
-                                <?php echo $dev[$k]["lastname"]; ?> <!-- Last name -->
-                            </td>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','username','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
-                                <?php echo $dev[$k]["username"]; ?> <!-- User name -->
-                            </td>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','icon','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
-                                <?php echo $dev[$k]["icon"]; ?>&nbsp;&nbsp; <!-- Font Awesome icon -->
-                                <i class="fa fa-2x fa-<?php echo $dev[$k]["icon"]; ?>"></i>
-                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'firstname','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $dev[$k]["firstname"]; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','lastname','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $dev[$k]["lastname"]; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','username','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $dev[$k]["username"]; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','icon','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $dev[$k]["icon"]; ?>&nbsp;&nbsp;<i class="fa fa-2x fa-<?php echo $dev[$k]["icon"]; ?>"></i></td>
                         </tr>
                     <?php
                     }
