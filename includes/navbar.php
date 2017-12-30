@@ -20,9 +20,8 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 ?>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Agile Planner</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <a class="navbar-brand" href="index.php">Agile Planner</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -36,7 +35,7 @@ ini_set("display_errors", 1);
         <a class="nav-link" href="systems.php">Systems</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="weeks.php">Weeks/Sprints</a>
+        <a class="nav-link" href="weeks.php">Weeks</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="velocity.php">Planned Velocities</a>
@@ -48,21 +47,25 @@ ini_set("display_errors", 1);
       <li class="nav-item">
         <a class="nav-link" href="backlog.php">Backlog</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="effort.php">Effort</a>
+      </li>
 
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
+          Reporting
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="reporting_bydeveloper.php">By Developer</a>
           <a class="dropdown-item" href="#">Another action</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Something else here</a>
         </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+        <a class="nav-link" href="todo.php">TO-DO</a>
       </li>
     </ul>
   </div>
 </nav>
+<p class="alert alert-danger" style="margin-top:60px"><strong>THIS IS BETA FOR TESTING, COMMENT AND FURTHER DEVELOPMENT</strong><br>Tested in Chrome<br>Unknown Bug in Firefox means contenteditable tables are unreliable for integer values (treating as string and preventing database save???)<br>Untested in IE</p>

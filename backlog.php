@@ -163,7 +163,9 @@ $userstories = $db_handle->runQuery($sql4);
         echo '<div class="row alert alert-dark">'.$sql.'</div>';
         // Ensure there are rows to report from search.
         if ($db_handle->numRows($sql) < 1 ) {
-            echo 'There are no results for that filter.<br>';
+            $sql = "SELECT * from " . $table; // Override filters if no results from filtered search.
+        }
+        if ($db_handle->numRows($sql) < 1 ) {
             $sql = "SELECT * from " . $table; // Override filters if no results from filtered search.
         }
         $backlog = $db_handle->runQuery($sql); // Get backlog list, including filters where set.
@@ -192,75 +194,79 @@ $userstories = $db_handle->runQuery($sql4);
             <!-- Main body of table -->
             <tbody>
                 <?php
-                // Calculate business value from other fields and add to backlog array.
-                foreach($backlog as $k=>$v) {
-                    $backlog[$k]["businessvalue"] = $backlog[$k]["MoSCoW"]+$backlog[$k]["Releasability"]+$backlog[$k]["Risk"]+$backlog[$k]["DependenciesDownstream"]-$backlog[$k]["DependenciesUpstream"];
-                }
-
-                foreach($backlog as $k=>$v) { // Loop through all backlog items from filtered search.
-                    // Get epic title from epicid in backlog array.
-                    $sql = "SELECT title FROM epic WHERE id = ".$backlog[$k]["epicid"];
-                    $epic = $db_handle->runQuery($sql);
-                    foreach ($epic as $e) {
-                        $epictitle=$e['title'];
+                if (count($backlog) > 0) {
+                    // Calculate business value from other fields and add to backlog array.
+                    foreach($backlog as $k=>$v) {
+                        $backlog[$k]["businessvalue"] = $backlog[$k]["MoSCoW"]+$backlog[$k]["Releasability"]+$backlog[$k]["Risk"]+$backlog[$k]["DependenciesDownstream"]-$backlog[$k]["DependenciesUpstream"];
                     }
-                ?>
-                    <!-- Create each row from array -->
-                    <tr class="table-row" width="100%">
-                        <td contenteditable="false">
-                            <?php echo $backlog[$k]["id"]; ?> <!-- ID -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'type','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["type"]; ?> <!-- Type -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'epicid','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["epicid"].': '.$epictitle; ?> <!-- Epic ID/Title -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'parent','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["parent"]; ?> <!-- Parent User story id -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','title','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["title"]; ?> <!-- Title -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','completion','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["completion"]; ?> <!-- Progress -->
-                        </td>
-                        <td class="maxwidth100" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','description','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["description"]; ?> <!-- Description -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','deadline','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["deadline"]; ?> <!-- Deadline -->
-                        </td>
-                        <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','notes','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["notes"]; ?> <!-- Notes -->
-                        </td>
-                        <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','MoSCoW','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["MoSCoW"]; ?> <!-- BV-MoSCoW -->
-                        </td>
-                        <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'Releasbility','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["Releasability"]; ?> <!-- BV-Releasability -->
-                        </td>
-                        <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'Risk','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["Risk"]; ?> <!-- BV-Risk -->
-                        </td>
-                        <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'DependenciesUpstream','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["DependenciesUpstream"]; ?> <!-- BV-Dependencies-Upstream (# of tasks this task is dependent on) -->
-                        </td>
-                        <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'DependenciesDownstream','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $backlog[$k]["DependenciesDownstream"]; ?> <!-- BV-Dependencies-Downstream (# of tasks dependent on this task) -->
-                        </td>
-                        <td class="maxwidth32" contenteditable="false">
-                            <?php echo '<strong>'.$backlog[$k]["businessvalue"].'</strong>'; ?> <!-- Business Value -->
+
+                    foreach($backlog as $k=>$v) { // Loop through all backlog items from filtered search.
+                        // Get epic title from epicid in backlog array.
+                        $sql = "SELECT title FROM epic WHERE id = ".$backlog[$k]["epicid"];
+                        $epic = $db_handle->runQuery($sql);
+                        foreach ($epic as $e) {
+                            $epictitle=$e['title'];
+                        }
+                        ?>
+                        <!-- Create each row from array -->
+                        <tr class="table-row" width="100%">
+                            <td contenteditable="false">
+                                <?php echo $backlog[$k]["id"]; ?> <!-- ID -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'type','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["type"]; ?> <!-- Type -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'epicid','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["epicid"].': '.$epictitle; ?> <!-- Epic ID/Title -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'parent','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["parent"]; ?> <!-- Parent User story id -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','title','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["title"]; ?> <!-- Title -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','completion','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["completion"]; ?> <!-- Progress -->
+                            </td>
+                            <td class="maxwidth100" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','description','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["description"]; ?> <!-- Description -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','deadline','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["deadline"]; ?> <!-- Deadline -->
+                            </td>
+                            <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','notes','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["notes"]; ?> <!-- Notes -->
+                            </td>
+                            <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','MoSCoW','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["MoSCoW"]; ?> <!-- BV-MoSCoW -->
+                            </td>
+                            <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'Releasbility','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["Releasability"]; ?> <!-- BV-Releasability -->
+                            </td>
+                            <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'Risk','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["Risk"]; ?> <!-- BV-Risk -->
+                            </td>
+                            <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'DependenciesUpstream','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["DependenciesUpstream"]; ?> <!-- BV-Dependencies-Upstream (# of tasks this task is dependent on) -->
+                            </td>
+                            <td class="maxwidth32" contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'DependenciesDownstream','<?php echo $backlog[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $backlog[$k]["DependenciesDownstream"]; ?> <!-- BV-Dependencies-Downstream (# of tasks dependent on this task) -->
+                            </td>
+                            <td class="maxwidth32" contenteditable="false">
+                                <?php echo '<strong>'.$backlog[$k]["businessvalue"].'</strong>'; ?> <!-- Business Value -->
+                            </td>
+                        </tr>
+                    <?php
+                    } // End ForEach in main body of table.
+                    ?>
+                    <tr> <!-- Spacer row -->
+                        <td colspan=15>
+                            <br><br>
                         </td>
                     </tr>
                 <?php
-                } // End ForEach in main body of table.
+                }
                 ?>
-                <tr> <!-- Spacer row -->
-                    <td colspan=15>
-                        <br><br>
-                    </td>
-                </tr>
                 <!-- New task/user story form -->
                 <tr>
                     <th colspan=15>Add a new Task or User Story</th>

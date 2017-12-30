@@ -124,46 +124,50 @@ $systems = $db_handle->runQuery($sql2);
             <!-- Main body of table -->
             <tbody>
                 <?php
-                foreach($epics as $k=>$v) { // Loop through epics from filtered search.
-                    // Get system names from system id.
-                    $sql = "SELECT system FROM system WHERE id = ".$epics[$k]["systemid"];
-                    $system = $db_handle->runQuery($sql);
-                    foreach ($system as $s) {
-                        $systemname=$s['system'];
-                    }
-                ?>
-                    <tr class="table-row" width="100%">
-                        <td contenteditable="false">
-                            <?php echo $epics[$k]["id"]; ?> <!-- ID -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'systemid','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $epics[$k]["systemid"].':'.$systemname; ?> <!-- System -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','title','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $epics[$k]["title"]; ?> <!-- Epic Title -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','description','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $epics[$k]["description"]; ?> <!-- Description -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','deadline','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $epics[$k]["deadline"]; ?> <!-- Deadline -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','notes','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $epics[$k]["notes"]; ?> <!-- Notes -->
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','icon','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $epics[$k]["icon"]; ?>&nbsp;&nbsp; <!-- FA icon -->
-                            <i class="fa fa-2x fa-<?php echo $epics[$k]["icon"]; ?>"></i>
+                if (count($epics) >0) {
+                    foreach($epics as $k=>$v) { // Loop through epics from filtered search.
+                        // Get system names from system id.
+                        $sql = "SELECT system FROM system WHERE id = ".$epics[$k]["systemid"];
+                        $system = $db_handle->runQuery($sql);
+                        foreach ($system as $s) {
+                            $systemname=$s['system'];
+                        }
+                        ?>
+                        <tr class="table-row" width="100%">
+                            <td contenteditable="false">
+                                <?php echo $epics[$k]["id"]; ?> <!-- ID -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'systemid','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $epics[$k]["systemid"].':'.$systemname; ?> <!-- System -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','title','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $epics[$k]["title"]; ?> <!-- Epic Title -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','description','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $epics[$k]["description"]; ?> <!-- Description -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','deadline','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $epics[$k]["deadline"]; ?> <!-- Deadline -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','notes','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $epics[$k]["notes"]; ?> <!-- Notes -->
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','icon','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
+                                <?php echo $epics[$k]["icon"]; ?>&nbsp;&nbsp; <!-- FA icon -->
+                                <i class="fa fa-2x fa-<?php echo $epics[$k]["icon"]; ?>"></i>
+                            </td>
+                        </tr>
+                    <?php
+                    } // End ForEach in main body of table.
+                    ?>
+                    <tr>
+                        <td colspan=7> <!-- Spacer row -->
+                            <p>Note: If editing the System in an existing epic, although the system name is displayed, the value to be entered is the system id number found on the systems page. For new Epics, the dropdown will handle this for you.<br><br></p>
                         </td>
                     </tr>
                 <?php
-                } // End ForEach in main body of table.
+                }
                 ?>
-                <tr>
-                    <td colspan=7> <!-- Spacer row -->
-                        <p>Note: If editing the System in an existing epic, although the system name is displayed, the value to be entered is the system id number found on the systems page. For new Epics, the dropdown will handle this for you.<br><br></p>
-                    </td>
-                </tr>
                 <!-- New Epic form -->
                 <tr>
                     <th colspan=7>Add a new Task or User Story</th>

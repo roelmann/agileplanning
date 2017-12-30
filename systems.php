@@ -51,30 +51,29 @@ $sys = $db_handle->runQuery($sql);
             <!-- Main body of table -->
             <tbody>
                 <?php
-                foreach($sys as $k=>$v) {
-                ?>
-                    <tr class="table-row">
-                        <td contenteditable="false">
-                            <?php echo $sys[$k]["id"]; ?>
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'system','<?php echo $sys[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $sys[$k]["system"]; ?>
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','productowner','<?php echo $sys[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $sys[$k]["productowner"]; ?>
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','customercontact','<?php echo $sys[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $sys[$k]["customercontact"]; ?>
+                if (count($sys) > 0) {
+                    foreach($sys as $k=>$v) {
+                    ?>
+                        <tr class="table-row">
+                            <td contenteditable="false">
+                                <?php echo $sys[$k]["id"]; ?>
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'system','<?php echo $sys[$k]['id']; ?>')" onClick="showEdit(this);"><?php echo $sys[$k]['system']; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','productowner','<?php echo $sys[$k]['id']; ?>')" onClick="showEdit(this);"><?php echo $sys[$k]['productowner']; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','customercontact','<?php echo $sys[$k]['id']; ?>')" onClick="showEdit(this);"><?php echo $sys[$k]['customercontact']; ?></td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                    <tr>
+                        <td colspan=5> <!-- Spacer row -->
+                            <br><br>
                         </td>
                     </tr>
                 <?php
                 }
                 ?>
-                <tr>
-                    <td colspan=5>
-                        <br><br>
-                    </td>
-                </tr>
+                <!-- New System form -->
                 <tr>
                     <th colspan=5>Add a new system</th>
                 </tr>

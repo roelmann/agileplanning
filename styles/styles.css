@@ -20,10 +20,12 @@ i.fa {
 .page-backlog .table-row .maxwidth100 {
     max-width:100px;
 }
-.page-velocity .table-header {
+.page-velocity .table-header,
+.page-effort .table-header,
+.page-repbydev .table-header {
     height:85px;
 }
-.page-velocity .weekheader .rotated {
+.weekheader .rotated {
     height:12px;
     width:20px;
     white-space:nowrap;

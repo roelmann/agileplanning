@@ -28,7 +28,7 @@ require_once("dbcontroller.php");
 $table = 'weeks'; // Main table.
 $db_handle = new DBController(); // Set up database connection.
 $sql = "SELECT * from " . $table;
-$dev = $db_handle->runQuery($sql);
+$week = $db_handle->runQuery($sql);
 ?>
 
 <!-- Header Title -->
@@ -49,29 +49,27 @@ $dev = $db_handle->runQuery($sql);
             </thead>
             <tbody>
                 <?php
-                foreach($dev as $k=>$v) {
-                ?>
-                    <tr class="table-row">
-                        <td contenteditable="false">
-                            <?php echo $dev[$k]["id"]; ?>
-                        </td>
-                        <td contenteditable="false">
-                            <?php echo $dev[$k]["weekcommencing"]; ?>
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','sprint','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $dev[$k]["sprint"]; ?>
-                        </td>
-                        <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','events','<?php echo $dev[$k]["id"]; ?>')" onClick="showEdit(this);">
-                            <?php echo $dev[$k]["events"]; ?>
-                        </td>
-                    </tr>
-                <?php
+                if (count($week) > 0) {
+                    foreach($week as $k=>$v) {
+                    ?>
+                        <tr class="table-row">
+                            <td contenteditable="false">
+                                <?php echo $week[$k]['id']; ?>
+                            </td>
+                            <td contenteditable="false">
+                                <?php echo $week[$k]['weekcommencing']; ?>
+                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','sprint','<?php echo $week[$k]['id']; ?>')" onClick="showEdit(this);"><?php echo $week[$k]['sprint']; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','events','<?php echo $week[$k]['id']; ?>')" onClick="showEdit(this);"><?php echo $week[$k]['events']; ?></td>
+                        </tr>
+                    <?php
+                    }
                 }
                 ?>
             </tbody>
         </table>
     </div>
-    <div>Adding new weeks in bulk should be done via the database directly.</div>
+    <div><p class="alert alert-info">Adding new weeks in bulk should be done via the database directly.<br><br></p></div>
 <?php
 include('includes/foot.php');
 ?>
