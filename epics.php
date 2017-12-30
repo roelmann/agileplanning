@@ -137,25 +137,12 @@ $systems = $db_handle->runQuery($sql2);
                             <td contenteditable="false">
                                 <?php echo $epics[$k]["id"]; ?> <!-- ID -->
                             </td>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'systemid','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                                <?php echo $epics[$k]["systemid"].':'.$systemname; ?> <!-- System -->
-                            </td>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','title','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                                <?php echo $epics[$k]["title"]; ?> <!-- Epic Title -->
-                            </td>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','description','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                                <?php echo $epics[$k]["description"]; ?> <!-- Description -->
-                            </td>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','deadline','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                                <?php echo $epics[$k]["deadline"]; ?> <!-- Deadline -->
-                            </td>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','notes','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                                <?php echo $epics[$k]["notes"]; ?> <!-- Notes -->
-                            </td>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','icon','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);">
-                                <?php echo $epics[$k]["icon"]; ?>&nbsp;&nbsp; <!-- FA icon -->
-                                <i class="fa fa-2x fa-<?php echo $epics[$k]["icon"]; ?>"></i>
-                            </td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'systemid','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $epics[$k]["systemid"].':'.$systemname; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','title','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $epics[$k]["title"]; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','description','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $epics[$k]["description"]; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','deadline','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $epics[$k]["deadline"]; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','notes','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $epics[$k]["notes"]; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','icon','<?php echo $epics[$k]["id"]; ?>')" onClick="showEdit(this);"><?php echo $epics[$k]["icon"]; ?></td>
                         </tr>
                     <?php
                     } // End ForEach in main body of table.
