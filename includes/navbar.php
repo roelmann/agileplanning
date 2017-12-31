@@ -63,7 +63,7 @@ ini_set("display_errors", 1);
         </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="todo.php">TO-DO</a>
+        <a class="nav-link" href="https://github.com/roelmann/agileplanning/issues">TO-DO</a>
       </li>
     </ul>
   </div>
