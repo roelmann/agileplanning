@@ -139,13 +139,13 @@ $userstories = $db_handle->runQuery($userstorylist);
     if (isset($_POST['epic']) && $_POST['epic'] !== 'all') {
         $filterepic = " AND epicid = ". $_POST['epic']; // Apply filter.
     } else {
-        $filterepic = " AND epicid >0"; // Or select id>1 - must have some content for table.
+        $filterepic = " AND epicid >=0"; // Or select id>1 - must have some content for table.
     }
     if (isset($_POST['parent']) && $_POST['parent'] !== 'all') {
         $filterparent = " AND parent = ". $_POST['parent']; // Apply filter.
-        $filterepic = " AND epicid >0"; // Override Epic filter to prevent clashes.
+        $filterepic = " AND epicid >=0"; // Override Epic filter to prevent clashes.
     } else {
-        $filterparent = " AND parent >0"; // Or select id>0 - must have some content for table.
+        $filterparent = " AND parent >=0"; // Or select id>0 - must have some content for table.
     }
 
     if (isset($_POST['dev']) && $_POST['dev'] !== 'all') {
