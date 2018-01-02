@@ -76,12 +76,12 @@ $tasklist = $db_handle->runQuery($sqltasklist);
     if (isset($_POST['startdate']) && $_POST['startdate'] !== '') {
         $startdate = $_POST['startdate'];
     } else {
-        $startdate = '2018-01-01';
+        $startdate = date('Y-m-d', time() - 1814400);
     }
     if (isset($_POST['enddate']) && $_POST['enddate'] !== '') {
         $enddate = $_POST['enddate'];
     } else {
-        $enddate = '2048-01-01';
+        $enddate = date('Y-m-d', time() + 1814400);
     }
     if (isset($_POST['dev']) && $_POST['dev'] !== 'none') {
         $filterdev = " WHERE developerid = ". $_POST['dev']; // Apply filter.

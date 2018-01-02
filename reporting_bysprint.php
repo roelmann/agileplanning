@@ -80,8 +80,8 @@ $tasklist = $db_handle->runQuery($sqltasklist);
             $enddate = $sprintdate[$k]['weekcommencing']; // Loop overrides each time so this ends up as the last one.
         }
     } else {
-        $startdate = '2018-01-01';
-        $enddate = '2048-01-01';
+        $startdate = date('Y-m-d', time() - 1814400);
+        $enddate = date('Y-m-d', time() + 1814400);
     }
     if (isset($_POST['dev']) && $_POST['dev'] !== 'none') {
         $filterdev = " WHERE developerid = ". $_POST['dev']; // Apply filter.

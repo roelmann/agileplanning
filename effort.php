@@ -68,7 +68,7 @@ $tasklist = $db_handle->runQuery($sqltasklist);
                         }
                         ?>
                         <option value="<?php echo $tsk['id'];?>">
-                            <?php echo $tsk['type'].' '.$epictitle.' '.$systemname.' '.$tsk['title'];?>
+                            <?php echo $epictitle.' '.$systemname.' '.$tsk['title'];?>
                         </option>
                     <?php } ?>
                     </select>
@@ -94,16 +94,15 @@ $tasklist = $db_handle->runQuery($sqltasklist);
     </div>
 
     <?php
-
     if (isset($_POST['startdate']) && $_POST['startdate'] !== '') {
         $startdate = $_POST['startdate'];
     } else {
-        $startdate = '2018-01-01';
+        $startdate = date('Y-m-d', time() - 1814400);
     }
     if (isset($_POST['enddate']) && $_POST['enddate'] !== '') {
         $enddate = $_POST['enddate'];
     } else {
-        $enddate = '2048-01-01';
+        $enddate = date('Y-m-d', time() + 1814400);
     }
     if (isset($_POST['dev']) && $_POST['dev'] !== 'all') {
         $filterdev = " WHERE developerid = ". $_POST['dev']; // Apply filter.
@@ -178,10 +177,12 @@ $tasklist = $db_handle->runQuery($sqltasklist);
                     // Get task title, epic and system.
                     // Task name.
                     $sqltask = "SELECT epicid, title FROM task WHERE id = ".$taskid;
+                    if($db_handle->numRows($sqltask)>0){
                     $tasksel = $db_handle->runQuery($sqltask);
-                    foreach ($tasksel as $ta) {
-                        $epicid = $ta['epicid'];
-                        $tasktitle = $ta['title'];
+
+                    foreach ($tasksel as $k=>$ta) {
+                        $epicid = $tasksel[$k]['epicid'];
+                        $tasktitle = $tasksel[$k]['title'];
                     }
                     // Epic name.
                     $sqlepic = "SELECT systemid,title FROM epic WHERE id = ". $epicid;
@@ -232,6 +233,7 @@ $tasklist = $db_handle->runQuery($sqltasklist);
                         ?>
                     </tr>
                 <?php
+                    }
                 }
                 ?>
                 <tr>
