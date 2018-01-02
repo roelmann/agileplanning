@@ -181,7 +181,7 @@ $systems = $db_handle->runQuery($sql2);
                             <textarea name="description" rows="5" cols="30"> </textarea>
                         </td>
                         <!-- Deadline date -->
-                        <td>
+                        <td>*
                             <input type="date" name="deadline" />
                         </td>
                         <!-- Notes -->

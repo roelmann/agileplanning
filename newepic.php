@@ -50,7 +50,7 @@ if (isset($_POST['submit'])) {
         echo '<p class="text-danger">* System: '.$systemid.':'.$systemname.'</p>';
         echo '<p class="text-danger">* Title: '.$title.'</p>';
         echo '<p>Description: '.$description.'</p>';
-        echo '<p>Deadline: '.$deadline.'</p>';
+        echo '<pclass="text-danger">* Deadline: '.$deadline.'</p>';
         echo '<p>Notes: '.$notes.'</p>';
         echo '<p>icon: '.$icon.'</li>';
         echo '<p class="alert alert-primary">The page will refresh in 10seconds.

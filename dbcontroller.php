@@ -22,8 +22,8 @@ ini_set("display_errors", 1);
 
 class DBController {  // Set Db variables.
     private $host = "localhost";
-    private $user = "root";
-    private $password = "R0e!m4nn";
+    private $user = "moodle01";
+    private $password = "GKOiguh7687FFih78yGIIISshiOUFSherg";
     private $database = "agileplan";
     public $conn;
 
