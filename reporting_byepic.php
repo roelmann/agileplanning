@@ -107,7 +107,7 @@ $userstories = $db_handle->runQuery($userstorylist);
             <div class="filterbyparent col-4">
                 <label><strong>Parent US:</strong></label><br>
                 <select name="parent">
-                    <option value=0>No Parent UserStory</option> <!-- No user story -->
+                    <option value='all'>No Parent UserStory</option> <!-- No user story -->
                     <!-- Drop down of existing user stories -->
                     <?php foreach ($userstories as $b) { ?>
                         <option value="<?php echo $b['id'];?>"> <?php echo $b['id'].':'.$b['title'];?> </option>
@@ -161,6 +161,7 @@ $userstories = $db_handle->runQuery($userstorylist);
     $weeks = $db_handle->runQuery($sql1);
     // Get tasks to list.
     $sqltasks = "SELECT id FROM ".$table3." WHERE id>0 ".$filterepic.$filterparent;
+    echo $sqltasks.'<br>';
     $tasklist = $db_handle->runQuery($sqltasks);
     $tskl = '(';
     foreach($tasklist as $tk){
