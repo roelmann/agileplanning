@@ -59,7 +59,7 @@ ini_set("display_errors", 1);
           <a class="dropdown-item" href="reporting_bydeveloper.php">By Developer</a>
           <a class="dropdown-item" href="reporting_bysprint.php">By Sprint</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="reporting_byepic.php">By Epic - coming soon</a>
+          <a class="dropdown-item" href="reporting_byepic.php">By Various filters</a>
         </div>
       </li>
       <li class="nav-item">
