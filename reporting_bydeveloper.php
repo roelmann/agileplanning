@@ -194,8 +194,8 @@ $tasklist = $db_handle->runQuery($sqltasklist);
                         $sql = "SELECT * from " . $table . " WHERE weekid = ".$weeks[$kw]['id'] . " AND developerid = ".$devid;
                         $eftotallist = $db_handle->runQuery($sql);
                         $eftotal = 0;
-                        foreach ($eftotallist as $e){
-                            $eftotal=$eftotal+$eftotallist[0]['effort'];
+                        foreach ($eftotallist as $k=>$v){
+                            $eftotal=$eftotal+$eftotallist[$k]['effort'];
                         }
                         $wkvel = $db_handle->runQuery("SELECT plannedvelocity FROM velocity WHERE developerid=".$devid." AND weekid=".$weeks[$kw]['id']);
                         foreach ($wkvel as $w) {
