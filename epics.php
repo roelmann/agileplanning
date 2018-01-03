@@ -110,7 +110,7 @@ $systems = $db_handle->runQuery($sql2);
     <div class="main-content">
         <table class="table table-striped">
             <!-- Table header row -->
-            <thead class="thead-dark">
+            <thead class="thead-dark sticky-top">
                 <tr>
                     <th class="table-header" width="10%">ID</th>
                     <th class="table-header">System</th>
@@ -157,7 +157,7 @@ $systems = $db_handle->runQuery($sql2);
                 ?>
                 <!-- New Epic form -->
                 <tr>
-                    <th colspan=7>Add a new Task or User Story</th>
+                    <th colspan=7>Add a new Epic</th>
                 </tr>
                 <form action="newepic.php?t=epic" method="post">
                     <tr class="table-row">

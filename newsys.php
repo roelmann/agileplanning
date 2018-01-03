@@ -32,6 +32,7 @@ if (isset($_POST['submit'])) {
 
     // Get form data, making sure it is valid.
     $system = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['system']));
+    $seniordev = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['seniordev']));
     $productowner = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['productowner']));
     $customercontact = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['customercontact']));
     $error = '';
@@ -41,6 +42,7 @@ if (isset($_POST['submit'])) {
         // Generate error message.
         echo '<p class="alert alert-danger">ERROR: Please fill in all required fields!</p>';
         echo '<p class="text-danger">* System: '.$system.'</p>';
+        echo '<p>Senior Developer: '.$seniordev.'</p>';
         echo '<p>Product Owner: '.$productowner.'</p>';
         echo '<p>Customer Contact: '.$customercontact.'</p>';
         echo '<p class="alert alert-primary">The page will refresh in 10seconds.

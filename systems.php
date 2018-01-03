@@ -44,6 +44,7 @@ $sys = $db_handle->runQuery($sql);
                 <tr>
                     <th class="table-header" width="10%">ID</th>
                     <th class="table-header">System</th>
+                    <th class="table-header">Senior Developer</th>
                     <th class="table-header">Product Owner</th>
                     <th class="table-header">Primary Customer Contact</th>
                 </tr>
@@ -59,6 +60,8 @@ $sys = $db_handle->runQuery($sql);
                                 <?php echo $sys[$k]["id"]; ?>
                             </td>
                             <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>', 'system','<?php echo $sys[$k]['id']; ?>')" onClick="showEdit(this);"><?php echo $sys[$k]['system']; ?></td>
+                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','seniordev','<?php echo $sys[$k]['id']; ?>')" onClick="showEdit(this);"><?php echo $sys[$k]['seniordev']; ?></td>
+
                             <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','productowner','<?php echo $sys[$k]['id']; ?>')" onClick="showEdit(this);"><?php echo $sys[$k]['productowner']; ?></td>
                             <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','customercontact','<?php echo $sys[$k]['id']; ?>')" onClick="showEdit(this);"><?php echo $sys[$k]['customercontact']; ?></td>
                         </tr>
@@ -84,6 +87,9 @@ $sys = $db_handle->runQuery($sql);
                         </td>
                         <td>*
                             <input type="text" name="system" value="" />
+                        </td>
+                        <td>
+                            <input type="text" name="seniordev" value="" />
                         </td>
                         <td>
                             <input type="text" name="productowner" value="" />
