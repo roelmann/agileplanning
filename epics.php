@@ -1,6 +1,6 @@
 <?php
 /*************************************************************************
- * NOTICE OF COPYRI|GHT                                                  *
+ * NOTICE OF COPYRIGHT                                                  *
  * Agile Planner - Copyright (C) 2017 onwards: R Oelmann                 *
  *                 oelmann.richard@gmail.com                             *
  *                                                                       *
@@ -24,7 +24,7 @@ include('includes/navbar.php');
 
 // Call initial database queries.
 require_once("dbcontroller.php");
-$table = 'epic'; // Main table.
+$table = $tbl_epic; // Main table.
 $db_handle = new DBController(); // Set up database connection.
 // Systems list array for drop downs
 $sql2 = "SELECT * from system";
@@ -38,9 +38,10 @@ $systems = $db_handle->runQuery($sql2);
 
     <!-- Filter controls Form -->
     <div class="filtercontrols container">
-        <form action="" method="post" class="row">
+        <form action="" method="post">
+        <div class="row">
             <!-- Filter by system -->
-            <div class="filterby col">
+            <div class="filterby col-6">
                 <label><strong>Filter by System: </strong></label>
                 <select name="filterby">
                     <option value="none">None</option>
@@ -50,7 +51,7 @@ $systems = $db_handle->runQuery($sql2);
                 </select>
             </div>
             <!-- Order by options -->
-            <div class="orderby col">
+            <div class="orderby col-4">
                 <label><strong>Order by: </strong></label>
                 <select name="orderby">
                     <option value="id">ID</option>
@@ -59,21 +60,26 @@ $systems = $db_handle->runQuery($sql2);
                     <option value="deadline">Deadline</option>
                 </select>
             </div>
+        </div>
+        <div class="row">
             <!-- Advanced manual filter -->
-            <div class="filteradv col-4">
-                <label><strong>Advanced: </strong></label>
-                <input type="text" name="advancedfilter">
+            <div class="filteradv col-8">
+                <label><strong>Advanced: </strong>SELECT * from <?php echo $table; ?></label>
+                <input type="text" name="advancedfilter" style="width:450px">
             </div>
             <!-- Submit button -->
-            <div class="submitbutton">
+            <div class="submitbutton col-2">
                 <input type="submit" value="Go">
             </div>
+        </div>
         </form>
         <?php
         // Process form.
         // If advanced filter set, this overrides others.
         if (isset($_POST['advancedfilter']) && $_POST['advancedfilter'] !== '') {
-            $condition = $_POST['advancedfilter'];
+            $conditioninput = $_POST['advancedfilter'];
+            $conditioninputlist = explode($conditioninput,';');
+            $condition = $conditioninputlist[0];
         } else {
             // Filter dropdowns.
             if (isset($_POST['filterby'])) {

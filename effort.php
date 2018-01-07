@@ -1,6 +1,6 @@
 <?php
 /*************************************************************************
- * NOTICE OF COPYRI|GHT                                                  *
+ * NOTICE OF COPYRIGHT                                                  *
  * Agile Planner - Copyright (C) 2017 onwards: R Oelmann                 *
  *                 oelmann.richard@gmail.com                             *
  *                                                                       *
@@ -24,109 +24,47 @@ include('includes/navbar.php');
 
 // Call initial database queries.
 require_once("dbcontroller.php");
-$table = 'effort';
-$table1 = 'weeks';
-$table2 = 'developers';
-$table3 = 'task';
-$db_handle = new DBController();
-$sqldevlist = "SELECT * from " . $table2; // Get full list for drop down for filter.
-$devlist = $db_handle->runQuery($sqldevlist);
-$sqltasklist = "SELECT * from " . $table3; // Get full list for drop down for filter.
-$tasklist = $db_handle->runQuery($sqltasklist);
+$table = $tbl_eff;
 ?>
 
 <header class="pageheader jumbotron text-center">
     <h1 class="display-5">Planned Effort</h1>
+    <button class="btn btn-primary" data-toggle="collapse" data-target="#filtercontrols"><i class="fa fa-filter">&nbsp;</i>Filters</button>
 </header>
 
-    <div class="filtercontrols container">
-        <form action="" method="post" class="row">
-            <div class="filterby filterbydate col">
-                <label><strong>Start Date: </strong></label><br>
-                <input type="date" name="startdate" min="2018-01-01">
-            </div>
-            <div class="filterby filterbydate col">
-                <label><strong>End Date: </strong></label><br>
-                <input type="date" name="enddate" max="2024-12-31">
-            </div>
-
-            <div class="filterby filterbytask col">
-                <label><strong>Task: </strong></label><br>
-                    <select name="task">
-                    <option value="all">All</option>
-                    <?php foreach ($tasklist as $tsk) {
-                        $sqlepic = "SELECT systemid,title FROM epic WHERE id = ".$tsk["epicid"];
-                        $epic = $db_handle->runQuery($sqlepic);
-                        foreach ($epic as $e) {
-                            $sysid=$e['systemid'];
-                            $epictitle=$e['title'];
-                        }
-                        $sqlsystem = "SELECT system FROM system WHERE id = ".$sysid;
-                        $system = $db_handle->runQuery($sqlsystem);
-                        foreach ($system as $s) {
-                            $systemname = $s['system'];
-                        }
-                        ?>
-                        <option value="<?php echo $tsk['id'];?>">
-                            <?php echo $epictitle.' '.$systemname.' '.$tsk['title'];?>
-                        </option>
-                    <?php } ?>
-                    </select>
-            </div>
-
-            <div class="filterby filterbydev col">
-                <label><strong>Developer: </strong></label><br>
-                    <select name="dev">
-                    <option value="all">All</option>
-                    <?php foreach ($devlist as $d) { ?>
-                        <option value="<?php echo $d['id'];?>">
-                            <?php echo $d['firstname'].' '.$d['lastname'];?>
-                        </option>
-                    <?php } ?>
-                    </select>
-            </div>
-
-            <div class="submitbutton">
-                <input type="submit" value="Go">
-            </div>
-        </form>
-        <br>
-    </div>
-
     <?php
-    if (isset($_POST['startdate']) && $_POST['startdate'] !== '') {
-        $startdate = $_POST['startdate'];
+    $db_handle = new DBController();
+
+    echo filtercontrols($db_handle, $bydate = TRUE, $bydev = TRUE, $byprog = FALSE, $byepic = TRUE, $byus = TRUE, $byadv = FALSE);
+
+    // Get filters for weeks for top of table.
+    $fsd = $fed = $fspr = $fdev = $fepic = $fpar = $fcom = '';
+    if (isset($_POST['startdate'])) {$fsd = $_POST['startdate'];}
+    if (isset($_POST['enddate'])) {$fed = $_POST['enddate'];}
+    if (isset($_POST['sprintnumber'])) {$fspr = $_POST['sprintnumber'];}
+    $startdate = filterprocess_startdate($db_handle, $fsd, $fspr);
+    $enddate = filterprocess_enddate($db_handle, $fed, $fspr);
+    $filterweeks = " AND weekcommencing >= '" . $startdate . "' AND weekcommencing <= '" . $enddate . "'";
+    // Get filters for body of table.
+    // Tasks.
+    if (isset($_POST['epic'])) {$fepic = $_POST['epic'];}
+    if (isset($_POST['parent'])) {$fpar = $_POST['parent'];}
+    if (isset($_POST['completion'])) {$fcom = $_POST['completion'];}
+    $filtertasks = filterprocess_tasks ($db_handle, $fepic, $fpar, $fcom);
+    // Developer.
+    if (isset($_POST['dev'])) {$fdev = $_POST['dev'];}
+    $filterdev = filterprocess_devs ($db_handle, $fdev);
+    if (isset($fdev) && $fdev !== '' && $fdev !== 'all') {
+        $devidsel = " id = ".$fdev;
     } else {
-        $startdate = date('Y-m-d', time() - 1814400);
-    }
-    if (isset($_POST['enddate']) && $_POST['enddate'] !== '') {
-        $enddate = $_POST['enddate'];
-    } else {
-        $enddate = date('Y-m-d', time() + 1814400);
-    }
-    if (isset($_POST['dev']) && $_POST['dev'] !== 'all') {
-        $filterdev = " WHERE developerid = ". $_POST['dev']; // Apply filter.
-    } else {
-        $filterdev = " WHERE developerid > 0"; // Or select all.
-    }
-    if (isset($_POST['task']) && $_POST['task'] !== 'all') {
-        $filtertask = " AND taskid = ". $_POST['task']; // Apply filter.
-    } else {
-        $filtertask = " AND taskid > 0"; // Or select all.
+        $devidsel = " id > 0";
     }
 
-    $sql1 = "SELECT * from " . $table1 . " WHERE weekcommencing >= '" . $startdate . "' AND weekcommencing <= '" . $enddate . "'";
-    echo $sql1.'<br>';
-    $weeks = $db_handle->runQuery($sql1);
-    $sql2 = "SELECT CONCAT_WS(';',taskid,developerid) FROM " . $table . $filterdev . $filtertask ;
-    echo $sql2;
-    $effort = $efforttdlist = $db_handle->runQuery($sql2);
-    $efforttd = array();
-    foreach($efforttdlist as $el) {
-        $efforttdl[] = $el["CONCAT_WS(';',taskid,developerid)"];
-    }
-    $efforttd = array_unique($efforttdl);
-    ?>
+    // Get weeks.
+    $weeks = weekslist ($db_handle, $tbl_wks, $filterweeks);
+
+    // Get tasks to list.
+    $tasknamelist = taskslist ($db_handle, $tbl_eff, $tbl_bklg, $filtertasks);    ?>
 
     <div class="main-content">
         <table class="table table-striped">
@@ -170,71 +108,7 @@ $tasklist = $db_handle->runQuery($sqltasklist);
             </thead>
             <tbody>
                 <?php
-                foreach($efforttd as $eff) {
-                    $tasks = explode(';',$eff);
-                    $taskid = $tasks[0];
-                    $devid = $tasks[1];
-                    // Get task title, epic and system.
-                    // Task name.
-                    $sqltask = "SELECT epicid, title FROM task WHERE id = ".$taskid;
-                    if($db_handle->numRows($sqltask)>0){
-                    $tasksel = $db_handle->runQuery($sqltask);
-
-                    foreach ($tasksel as $k=>$ta) {
-                        $epicid = $tasksel[$k]['epicid'];
-                        $tasktitle = $tasksel[$k]['title'];
-                    }
-                    // Epic name.
-                    $sqlepic = "SELECT systemid,title FROM epic WHERE id = ". $epicid;
-                    $epicsel = $db_handle->runQuery($sqlepic);
-                    foreach ($epicsel as $e) {
-                        $sysid=$e['systemid'];
-                        $epictitle=$e['title'];
-                    }
-                    // System.
-                    $sqlsystem = "SELECT system FROM system WHERE id = ".$sysid;
-                    $systemsel = $db_handle->runQuery($sqlsystem);
-                    foreach ($systemsel as $s) {
-                        $systemname = $s['system'];
-                    }
-                    $taskname = $epictitle.': '.$systemname.': '.$tasktitle;
-                    // Developer.
-                    $sql = "SELECT * FROM developers WHERE id = ".$devid;
-                    if ($db_handle->numrows($sql) < 1) {
-                        $devname = '';
-                    } else {
-                        $devdetails = $db_handle->runQuery($sql);
-                        foreach ($devdetails as $d) {
-                            $devname = $d['id'].':'.$d['firstname'].' '.$d['lastname'];
-                        }
-                    }
-                    ?>
-                    <tr class="table-row">
-                        <td contenteditable="false"><?php echo $taskname; ?></td>
-                        <td contenteditable = "false"><?php echo $devname; ?></td>
-                        <?php
-                        foreach($weeks as $kw=>$vw) {
-                            $sql = "SELECT * from " . $table . " WHERE taskid= ".$taskid." AND weekid = ".$weeks[$kw]['id'] . " AND developerid = ".$devid;
-                            if ($db_handle->numrows($sql) < 1) {
-                                $sqlinsert = "INSERT INTO ".$table." (taskid,developerid,weekid,effort) VALUES (".$taskid.",".$devid.",".$weeks[$kw]['id'].",0)";
-                                $db_handle->executeUpdate($sqlinsert);
-                            }
-                            $efftlist = $db_handle->runQuery($sql);
-                            $efftid=$efftlist[0]['id'];
-                            $eft=$efftlist[0]['effort'];
-                            $class='';
-                            if ($eft > 0) {
-                                $class = 'text-success font-weight-bold';
-                            }
-                            ?>
-                            <td contenteditable="true" onBlur="saveToDatabase(this, '<?php echo $table; ?>','effort','<?php echo $efftid; ?>')" onClick="showEdit(this);" class="<?php echo $class; ?>"><?php echo $eft; ?></td>
-                        <?php
-                        }
-                        ?>
-                    </tr>
-                <?php
-                    }
-                }
+                include ('includes/editingbody.php');
                 ?>
                 <tr>
                     <td colspan=250> <!-- Spacer row -->
@@ -243,7 +117,10 @@ $tasklist = $db_handle->runQuery($sqltasklist);
                 </tr>
                 <!-- New Effort form -->
                 <tr>
-                    <th colspan=250><p>Add a new effort row - Add the Task and Developer to add a row to the main table to edit effort by week.</p></th>
+                    <th colspan=250>
+                        <p>Add a new effort row - Add the Task and Developer to add a row to the main table to edit effort by week.</p>
+                        <p>Note: the filters at the top of the page can be used to restrict the dropdown lists below as well as the reporting in the main body of the table above.</p>
+                    </th>
                 </tr>
                 <form action="neweffort.php?t=effort" method="post">
                     <tr class="table-row">
@@ -252,10 +129,13 @@ $tasklist = $db_handle->runQuery($sqltasklist);
                             <select name="task">
                                 <option value="all">All</option>
                                 <?php
-                                foreach ($tasklist as $tsk) {
-                                    $type = $tsk["type"];
-                                    $title = $tsk['title'];
-                                    $sqlepic = "SELECT systemid,title FROM epic WHERE id = ".$tsk["epicid"];
+                                $sqltasklist = "SELECT * FROM ".$tbl_bklg." ts WHERE id > 0".$filtertasks;
+                                echo "<option>".$sqltasklist."</option>";
+                                $tasklist = $db_handle->runQuery($sqltasklist);
+                                foreach ($tasklist as $k=>$v) {
+                                    $type = $tasklist[$k]['type'];
+                                    $title = $tasklist[$k]['title'];
+                                    $sqlepic = "SELECT systemid,title FROM epic WHERE id = ".$tasklist[$k]['epicid'];
                                     $epic = $db_handle->runQuery($sqlepic);
                                     foreach ($epic as $e) {
                                         $sysid=$e['systemid'];
@@ -267,8 +147,8 @@ $tasklist = $db_handle->runQuery($sqltasklist);
                                         $systemname = $s['system'];
                                     }
                                     ?>
-                                    <option value="<?php echo $tsk['id'];?>">
-                                        <?php echo $type.' '.$epictitle.' '.$systemname.' '.$title;?>
+                                    <option value="<?php echo $tasklist[$k]['id'];?>">
+                                        <?php echo $type.': '.$epictitle.': '.$systemname.': '.$title;?>
                                     </option>
                                 <?php
                                 }
@@ -281,7 +161,9 @@ $tasklist = $db_handle->runQuery($sqltasklist);
                             <label><strong>Developer: </strong></label>
                             <select name="dev">
                                 <option value="all">All</option>
-                                <?php foreach ($devlist as $d) { ?>
+                                <?php
+                                $devlist = devslist ($db_handle, $tbl_dev, $devidsel);
+                                foreach ($devlist as $d) { ?>
                                     <option value="<?php echo $d['id'];?>">
                                         <?php echo $d['firstname'].' '.$d['lastname'];?>
                                     </option>

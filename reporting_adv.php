@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-
 /*************************************************************************
  * NOTICE OF COPYRIGHT                                                  *
  * Agile Planner - Copyright (C) 2017 onwards: R Oelmann                 *
@@ -22,27 +19,29 @@ ini_set("display_errors", 1);
  *************************************************************************/
 // Get head and navbar.
 include('includes/head.php');
-echo '<div class="page-wrapper container-fluid page-repbydev">';
+echo '<div class="page-wrapper container-fluid page-repadv">';
 include('includes/navbar.php');
 
 // Call initial database queries.
 require_once("dbcontroller.php");
 $table = $tbl_eff;
+
 ?>
 
 <header class="pageheader jumbotron text-center">
-    <h1 class="display-5">Reporting - By Developer</h1>
+    <h1 class="display-5">Reporting - By Various filters</h1>
     <p>To edit any of these values, please go to the appropriate editable page</p>
     <button class="btn btn-primary" data-toggle="collapse" data-target="#filtercontrols"><i class="fa fa-filter">&nbsp;</i>Filters</button>
+<!--    <button class="btn btn-info" data-toggle="collapse" data-target="#showsql"><i class="fa fa-code">&nbsp;</i>Show SQL generated</button> -->
 </header>
 
     <?php
     $db_handle = new DBController();
 
-    echo filtercontrols($db_handle, $bydate = TRUE, $bydev = TRUE, $byprog = FALSE, $byepic = FALSE, $byus = FALSE, $byadv = FALSE);
+    echo filtercontrols($db_handle, $bydate = TRUE, $bydev = TRUE, $byprog = TRUE, $byepic = TRUE, $byus = TRUE, $byadv = FALSE);
 
     // Get filters for weeks for top of table.
-    $fsd = $fed = $fspr = $fdev = '';
+    $fsd = $fed = $fspr = $fdev = $fepic = $fpar = $fcom = '';
     if (isset($_POST['startdate'])) {$fsd = $_POST['startdate'];}
     if (isset($_POST['enddate'])) {$fed = $_POST['enddate'];}
     if (isset($_POST['sprintnumber'])) {$fspr = $_POST['sprintnumber'];}
@@ -51,7 +50,10 @@ $table = $tbl_eff;
     $filterweeks = " AND weekcommencing >= '" . $startdate . "' AND weekcommencing <= '" . $enddate . "'";
     // Get filters for body of table.
     // Tasks.
-    $filtertasks = filterprocess_tasks ($db_handle, 'all', 'all', 'inprogress');
+    if (isset($_POST['epic'])) {$fepic = $_POST['epic'];}
+    if (isset($_POST['parent'])) {$fpar = $_POST['parent'];}
+    if (isset($_POST['completion'])) {$fcom = $_POST['completion'];}
+    $filtertasks = filterprocess_tasks ($db_handle, $fepic, $fpar, $fcom);
     // Developer.
     if (isset($_POST['dev'])) {$fdev = $_POST['dev'];}
     $filterdev = filterprocess_devs ($db_handle, $fdev);
@@ -67,25 +69,12 @@ $table = $tbl_eff;
     // Get tasks to list.
     $tasknamelist = taskslist ($db_handle, $tbl_eff, $tbl_bklg, $filtertasks);
 
-    // Get Planned velocities
-    $velwkstart = $velwkend = '';
-    foreach ($weeks as $k => $v) {
-        if ($velwkstart == '') {
-            $velwkstart = $weeks[$k]['id'];
-        }
-        $velwkend = $weeks[$k]['id'];
-    }
-    $sqlvel = "SELECT * from " .  $tbl_vel . " WHERE weekid >= " . $velwkstart . " AND weekid <= " . $velwkend . $filterdev;
-    $velocity = $db_handle->runQuery($sqlvel);
-
-
 //    echo '<div id="showsql" class="sql alert alert-info collapse">';
 //    echo $sqlweeks.'<br>';
-//    echo $sqlvel.'<br>';
 //    echo $sqltasks;
 //    echo '</div>';
 
-?>
+    ?>
 
     <div class="main-content">
         <table class="table table-striped">
@@ -127,65 +116,7 @@ $table = $tbl_eff;
                         ?>
                     </tr>
             </thead>
-            <thead class="thead-light">
-                <?php
-                // Developer.
-                $sql = "SELECT * FROM developers WHERE ".$devidsel;
-                if ($db_handle->numrows($sql) < 1) {
-                    $devname = 'Please select a developer in the Filters panel';
-                } else {
-                    $devdetails = $db_handle->runQuery($sql);
-                    foreach ($devdetails as $d) {
-                        $devname = $d['firstname'].' '.$d['lastname'];
-                    }
-                }
-                ?>
-                <th class="table-header" colspan=2><?php echo $devname; ?></th>
-                <?php
-                foreach($weeks as $kw=>$vw) {
-                    $sql = "SELECT * from " . $tbl_vel . " WHERE weekid= ".$weeks[$kw]['id'].$filterdev;
-                    $vel = $db_handle->runQuery($sql);
-                    $velid=$vel[0]['id'];
-                    $pv=$vel[0]['plannedvelocity'];
-                    ?>
-                    <th class="table-header"><?php echo $pv; ?></th>
-                <?php
-                }
-                ?>
-
-                </th>
-            </thead>
-
             <tbody>
-                <tr class="table-row">
-                    <td contenteditable="false" colspan=2>
-                        <strong>Total Planned Effort</strong>
-                    </td>
-                    <?php
-                    foreach($weeks as $kw=>$vw) {
-                        $sql = "SELECT * from " . $table . " WHERE weekid= ".$weeks[$kw]['id'].$filterdev;
-                        $eftotallist = $db_handle->runQuery($sql);
-                        $eftotal = 0;
-                        foreach ($eftotallist as $k=>$v){
-                            $eftotal=$eftotal+$eftotallist[$k]['effort'];
-                        }
-                        $sqlpv = "SELECT plannedvelocity FROM velocity WHERE weekid= ".$weeks[$kw]['id'].$filterdev;
-                        $wkvel = $db_handle->runQuery($sqlpv);
-                        foreach ($wkvel as $w) {
-                            $wkv = $w['plannedvelocity'];
-                        }
-                        if ($eftotal > $wkv) {
-                            $class="table-danger";
-                        } else {
-                            $class='';
-                        }
-                        ?>
-
-                        <td contenteditable="false" class="<?php echo $class; ?>"><?php echo $eftotal; ?></td>
-                    <?php
-                    }
-                    ?>
-                </tr>
 
                 <?php
                 include ('includes/reportingbody.php');
@@ -196,8 +127,6 @@ $table = $tbl_eff;
                         <br><br>
                     </td>
                 </tr>
-
-
             </tbody>
         </table>
         <p><br><br></p>

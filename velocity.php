@@ -1,6 +1,6 @@
 <?php
 /*************************************************************************
- * NOTICE OF COPYRI|GHT                                                  *
+ * NOTICE OF COPYRIGHT                                                  *
  * Agile Planner - Copyright (C) 2017 onwards: R Oelmann                 *
  *                 oelmann.richard@gmail.com                             *
  *                                                                       *
@@ -24,72 +24,40 @@ include('includes/navbar.php');
 
 // Call initial database queries.
 require_once("dbcontroller.php");
-$table = 'velocity';
-$table1 = 'weeks';
-$table2 = 'developers';
+$table = $tbl_vel;
 $db_handle = new DBController();
-$sqldevlist = "SELECT * from " . $table2;
-$devlist = $db_handle->runQuery($sqldevlist);
 ?>
 
 <header class="pageheader jumbotron text-center">
     <h1 class="display-5">Planned velocity</h1>
+    <button class="btn btn-primary" data-toggle="collapse" data-target="#filtercontrols"><i class="fa fa-filter">&nbsp;</i>Filters</button>
 </header>
-
-    <div class="filtercontrols container">
-        <form action="" method="post" class="row">
-            <div class="filterbydate col">
-                <label><strong>Start Date: </strong></label><br>
-                <input type="date" name="startdate" min="2018-01-01">
-            </div>
-            <div class="filterbydate col">
-                <label><strong>End Date: </strong></label><br>
-                <input type="date" name="enddate" max="2024-12-31">
-            </div>
-<!--
-            <div class="filterbydate col">
-                <label><strong>OR Number of weeks: </strong></label><br>
-                <input type="number" name="numberofweeks" min="0" max="250">
-            </div>
--->
-            <div class="filterbydev col">
-                <label><strong>Developer: </strong></label><br>
-                    <select name="dev">
-                    <option value="all">All</option>
-                    <?php foreach ($devlist as $d) { ?>
-                        <option value="<?php echo $d['id'];?>">
-                            <?php echo $d['firstname'].' '.$d['lastname'];?>
-                        </option>
-                    <?php } ?>
-                    </select>
-            </div>
-
-            <div class="submitbutton">
-                <input type="submit" value="Go">
-            </div>
-        </form>
-        <br>
-    </div>
     <?php
-    if (isset($_POST['startdate']) && $_POST['startdate'] !== '') {
-        $startdate = $_POST['startdate'];
+    echo filtercontrols($db_handle, $bydate = TRUE, $bydev = TRUE, $byprog = FALSE, $byepic = FALSE, $byus = FALSE, $byadv = FALSE);
+    // Get filters for weeks for top of table.
+    $fsd = $fed = $fspr = $fdev = '';
+    if (isset($_POST['startdate'])) {$fsd = $_POST['startdate'];}
+    if (isset($_POST['enddate'])) {$fed = $_POST['enddate'];}
+    if (isset($_POST['sprintnumber'])) {$fspr = $_POST['sprintnumber'];}
+    $startdate = filterprocess_startdate($db_handle, $fsd, $fspr);
+    $enddate = filterprocess_enddate($db_handle, $fed, $fspr);
+    $filterweeks = " AND weekcommencing >= '" . $startdate . "' AND weekcommencing <= '" . $enddate . "'";
+    // Get filters for body of table.
+    // Tasks.
+    $filtertasks = filterprocess_tasks ($db_handle, 'all', 'all', 'inprogress');
+    // Developer.
+    if (isset($_POST['dev'])) {$fdev = $_POST['dev'];}
+    $filterdev = filterprocess_devs ($db_handle, $fdev);
+    if (isset($fdev) && $fdev !== '' && $fdev !== 'all') {
+        $devidsel = " id = ".$fdev;
     } else {
-        $startdate = date('Y-m-d', time() - 1814400);
+        $devidsel = " id > 0";
     }
-    if (isset($_POST['enddate']) && $_POST['enddate'] !== '') {
-        $enddate = $_POST['enddate'];
-    } else {
-        $enddate = date('Y-m-d', time() + 1814400);
-    }
-    if (isset($_POST['dev']) && $_POST['dev'] !== 'all') {
-        $filterdev = " WHERE id = ". $_POST['dev'];
-    } else {
-        $filterdev = "";
-    }
-    $sql1 = "SELECT * from " . $table1 . " WHERE weekcommencing >= '" . $startdate . "' AND weekcommencing <= '" . $enddate . "'";
-    $weeks = $db_handle->runQuery($sql1);
-    $sql2 = "SELECT * from " . $table2 . $filterdev;
-    $devs = $db_handle->runQuery($sql2);
+
+    // Get weeks.
+    $weeks = weekslist ($db_handle, $tbl_wks, $filterweeks);
+    // Get developers.
+    $devs = devslist ($db_handle, $tbl_dev, $devidsel);
     ?>
 
     <div class="main-content">

@@ -1,6 +1,6 @@
 <?php
 /*************************************************************************
- * NOTICE OF COPYRI|GHT                                                  *
+ * NOTICE OF COPYRIGHT                                                  *
  * Agile Planner - Copyright (C) 2017 onwards: R Oelmann                 *
  *                 oelmann.richard@gmail.com                             *
  *                                                                       *
@@ -22,8 +22,8 @@ ini_set("display_errors", 1);
 
 class DBController {  // Set Db variables.
     private $host = "localhost";
-    private $user = "moodle01";
-    private $password = "xxxxxx";
+    private $user = "root";
+    private $password = "R0e!m4nn";
     private $database = "agileplan";
     public $conn;
 
@@ -37,6 +37,7 @@ class DBController {  // Set Db variables.
     }
 
     function runQuery($query) { // Run read query.
+//        echo $query.'<br>';
         $result = mysqli_query($this->conn,$query);
         while($row=mysqli_fetch_assoc($result)) {
             $resultset[] = $row;

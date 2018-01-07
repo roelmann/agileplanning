@@ -1,6 +1,6 @@
 <?php
 /*************************************************************************
- * NOTICE OF COPYRI|GHT                                                  *
+ * NOTICE OF COPYRIGHT                                                  *
  * Agile Planner - Copyright (C) 2017 onwards: R Oelmann                 *
  *                 oelmann.richard@gmail.com                             *
  *                                                                       *
@@ -102,6 +102,7 @@ $userstories = $db_handle->runQuery($sql4);
                     <br>
                     <select name="orderby">
                         <option value="id">ID</option>
+                        <option value="businessvalue">Business Value</option>
                         <option value="epicid">Epic</option>
                         <option value="parent">User Story</option>
                         <option value="deadline">Deadline</option>
@@ -124,7 +125,9 @@ $userstories = $db_handle->runQuery($sql4);
         // Process form.
         // If advanced filter set, this overrides others.
         if (isset($_POST['advancedfilter']) && $_POST['advancedfilter'] !== '') {
-            $condition = $_POST['advancedfilter'];
+            $conditioninput = $_POST['advancedfilter'];
+            $conditioninputlist = explode($conditioninput,';');
+            $condition = $conditioninputlist[0];
         } else {
             // Filter dropdowns.
             if (isset($_POST['filterby'])) {

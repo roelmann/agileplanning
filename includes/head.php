@@ -1,6 +1,6 @@
 <?php
 /*************************************************************************
- * NOTICE OF COPYRI|GHT                                                  *
+ * NOTICE OF COPYRIGHT                                                  *
  * Agile Planner - Copyright (C) 2017 onwards: R Oelmann                 *
  *                 oelmann.richard@gmail.com                             *
  *                                                                       *
@@ -41,6 +41,22 @@ ini_set("display_errors", 1);
         <!-- Bootstrap4 JS: Online link -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
+        <!--Epic/Task selector-->
+        <script type="text/javascript">
+            function fetch_select(val) {
+                $.ajax({
+                    type: 'post',
+                    url: 'fetcher.php',
+                    data: {
+                        epicid:val
+                    },
+                    success: function (response) {
+                        document.getElementById("taskselect").innerHTML=response;
+                    }
+                });
+            }
+        </script>
+
         <!--Bootswatch -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0-beta.2/spacelab/bootstrap.min.css">
 
@@ -69,3 +85,14 @@ ini_set("display_errors", 1);
 
     </head>
     <body>
+    <?php
+        include('lib.php');
+        $tbl_dev = 'developers';
+        $tbl_eff = 'effort';
+        $tbl_epic = 'epic';
+        $tbl_sys = 'system';
+        $tbl_bklg = 'task';
+        $tbl_vel = 'velocity';
+        $tbl_wks = 'weeks';
+
+    ?>

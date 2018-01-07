@@ -17,12 +17,20 @@
  *          http://www.gnu.org/copyleft/gpl.html                         *
  *                                                                       *
  *************************************************************************/
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+
+require_once("dbcontroller.php");
+$db_handle = new DBController(); // Set up database connection.
+$epicid = $_POST['epicid'];
+if (isset($epicid) && $epicid !== '' && $epicid !=='all') {
+    $sqldropdown = "SELECT * from task WHERE type = 'UserStory' AND epicid = ".$epicid;
+} else {
+    $sqldropdown = "SELECT * from task WHERE type = 'UserStory' AND epicid >= 0";
+}
+
+echo '<option value="all">All User Stories</option>';
+$taskdropdown = $db_handle->runQuery($sqldropdown);
+foreach ($taskdropdown as $k=>$v) {
+    echo "<option value=".$taskdropdown[$k]['id'].">".$taskdropdown[$k]['id'].": ".$taskdropdown[$k]['title']."</option>";
+}
+exit;
 ?>
-        </div> <!-- Close Main container -->
-        <footer class="footer fixed-bottom">
-            <p>Copyright: R Oelmann 2017 - Released under <a href="http://www.gnu.org/copyleft/gpl.html" alt="GNU/GPL license link">GNU/GPLv3</a></p>
-        </footer>
-    </body>
-</html>

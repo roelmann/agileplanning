@@ -1,8 +1,35 @@
+/*************************************************************************
+ * NOTICE OF COPYRIGHT                                                  *
+ * Agile Planner - Copyright (C) 2017 onwards: R Oelmann                 *
+ *                 oelmann.richard@gmail.com                             *
+ *                                                                       *
+ * This program is free software; you can redistribute it and/or modify  *
+ * it under the terms of the GNU General Public License as published by  *
+ * the Free Software Foundation; either version 3 of the License, or     *
+ * (at your option) any later version.                                   *
+ *                                                                       *
+ * This program is distributed in the hope that it will be useful,       *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ * GNU General Public License for more details:                          *
+ *                                                                       *
+ *          http://www.gnu.org/copyleft/gpl.html                         *
+ *                                                                       *
+ *************************************************************************/
+
 footer {
     background: #fff;
     border-top: solid 1px #222;
 }
-
+.jumbotron {
+    padding: 2rem
+}
+.filterby .row {
+    padding-bottom: 10px;
+}
+.filterby .filterbydate {
+    border-bottom:2px solid #f2f2f2;
+}
 i.fa {
     margin-left:10px;
     margin-right:10px;
