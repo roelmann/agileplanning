@@ -24,8 +24,10 @@ include('includes/navbar.php');
 
 // Call initial database queries.
 require_once("dbcontroller.php");
-$table = $tbl_eff;
+$db_handle = new DBController();
 
+$table = $tbl_eff;
+$orderby = array();
 ?>
 
 <header class="pageheader jumbotron text-center">
@@ -36,9 +38,7 @@ $table = $tbl_eff;
 </header>
 
     <?php
-    $db_handle = new DBController();
-
-    echo filtercontrols($db_handle, $bydate = TRUE, $bydev = TRUE, $byprog = TRUE, $byepic = TRUE, $byus = TRUE, $byadv = FALSE);
+    echo filtercontrols($db_handle, $bydate = TRUE, $bydev = TRUE, $byprog = TRUE, $byepic = TRUE, $byus = TRUE, $byadv = FALSE, $orderby);
 
     // Get filters for weeks for top of table.
     $fsd = $fed = $fspr = $fdev = $fepic = $fpar = $fcom = '';

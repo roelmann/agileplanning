@@ -21,7 +21,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1);
 ?>
         </div> <!-- Close Main container -->
-        <footer class="footer fixed-bottom">
+        <footer class="footer">
             <p>Copyright: R Oelmann 2017 - Released under <a href="http://www.gnu.org/copyleft/gpl.html" alt="GNU/GPL license link">GNU/GPLv3</a></p>
         </footer>
     </body>

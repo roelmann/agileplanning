@@ -23,7 +23,7 @@ function testing() {
     return $print;
 }
 
-function filtercontrols($db_handle, $bydate, $bydev, $byprog, $byepic, $byus, $byadv) {
+function filtercontrols($db_handle, $bydate, $bydev, $byprog, $byepic, $byus, $byadv, $orderby) {
 
     $sqldevlist = "SELECT * from " . $GLOBALS['tbl_dev'];
     $f_devlist = $db_handle->runQuery($sqldevlist);
@@ -124,10 +124,20 @@ function filtercontrols($db_handle, $bydate, $bydev, $byprog, $byepic, $byus, $b
     $filtercontrolsus .= '</div>';
 
     // Advanced filter.
-    $filtercontrolsadv  = '<div class="filteradv col-12">';
+    $filtercontrolsadv  = '<div class="filteradv col-9">';
     $filtercontrolsadv .= '<label><strong>Advanced: </strong></label>';
-    $filtercontrolsadv .= '<input type="text" name="advancedfilter" style="width:500px;">';
+    $filtercontrolsadv .= '<input type="text" name="advancedfilter">';
     $filtercontrolsadv .= '</div>';
+
+    // Order by.
+    $filterorder  = '<div class="filterorder col-3">';
+    $filterorder .= '<label><strong>Order by: </strong></label>';
+    $filterorder .= '<select name="orderby">';
+    foreach ($orderby as $ob) {
+        $filterorder .= '<option value="'.$ob.'">'.$ob.'</option>';
+    }
+    $filterorder .= '</select>';
+    $filterorder .= '</div>';
 
     // Put filter controls together as required.
     // $bydate, $bydev, $byprog, $byepic, $byus, $byadv
@@ -143,8 +153,9 @@ function filtercontrols($db_handle, $bydate, $bydev, $byprog, $byepic, $byus, $b
     if ($byepic) {$filtercontrols .= $filtercontrolsepic;}
     if ($byus) {$filtercontrols .= $filtercontrolsus;}
     if ($byepic || $byus) {$filtercontrols .= $startnewrow;}
-    if ($byadv) {
-        $filtercontrols .= $filtercontrolsadv;
+    if ($byadv) {$filtercontrols .= $filtercontrolsadv;}
+    if (count($orderby)>0) {$filtercontrols .= $filterorder;}
+    if ($byadv || count($orderby)>0) {
         $filtercontrols .= $startnewrow;
     }
     $filtercontrols .= $endform;

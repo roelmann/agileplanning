@@ -26,60 +26,28 @@ include('includes/navbar.php');
 require_once("dbcontroller.php");
 $table = $tbl_epic; // Main table.
 $db_handle = new DBController(); // Set up database connection.
-// Systems list array for drop downs
-$sql2 = "SELECT * from system";
-$systems = $db_handle->runQuery($sql2);
 ?>
 
 <!-- Header Title -->
 <header class="pageheader jumbotron text-center">
     <h1 class="display-5">Epics</h1>
+    <button class="btn btn-primary" data-toggle="collapse" data-target="#filtercontrols"><i class="fa fa-filter">&nbsp;</i>Filters</button>
 </header>
 
-    <!-- Filter controls Form -->
-    <div class="filtercontrols container">
-        <form action="" method="post">
-        <div class="row">
-            <!-- Filter by system -->
-            <div class="filterby col-6">
-                <label><strong>Filter by System: </strong></label>
-                <select name="filterby">
-                    <option value="none">None</option>
-                    <?php foreach ($systems as $sys) { ?>
-                        <option value="<?php echo $sys['id'];?>"> <?php echo $sys['system'];?> </option>
-                    <?php } ?>
-                </select>
-            </div>
-            <!-- Order by options -->
-            <div class="orderby col-4">
-                <label><strong>Order by: </strong></label>
-                <select name="orderby">
-                    <option value="id">ID</option>
-                    <option value="systemid">System</option>
-                    <option value="title">Title</option>
-                    <option value="deadline">Deadline</option>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <!-- Advanced manual filter -->
-            <div class="filteradv col-8">
-                <label><strong>Advanced: </strong>SELECT * from <?php echo $table; ?></label>
-                <input type="text" name="advancedfilter" style="width:450px">
-            </div>
-            <!-- Submit button -->
-            <div class="submitbutton col-2">
-                <input type="submit" value="Go">
-            </div>
-        </div>
-        </form>
-        <?php
+    <?php
+        $orderby=array('id','systemid','deadline','title');
+        echo filtercontrols($db_handle, $bydate = FALSE, $bydev = FALSE, $byprog = FALSE, $byepic = FALSE, $byus = FALSE, $byadv = TRUE, $orderby);
+
         // Process form.
         // If advanced filter set, this overrides others.
         if (isset($_POST['advancedfilter']) && $_POST['advancedfilter'] !== '') {
             $conditioninput = $_POST['advancedfilter'];
-            $conditioninputlist = explode($conditioninput,';');
-            $condition = $conditioninputlist[0];
+            if (strpos($conditioninput,';')) {
+                $conditioninputlist = explode($conditioninput,';');
+                $condition = $conditioninputlist[0];
+            } else {
+                $condition = $conditioninput;
+            }
         } else {
             // Filter dropdowns.
             if (isset($_POST['filterby'])) {

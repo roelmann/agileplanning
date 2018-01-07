@@ -34,8 +34,7 @@ i.fa {
     margin-left:10px;
     margin-right:10px;
 }
-
-.page-backlog .filteradv input {
+.filteradv input {
     width:450px;
 }
 .page-backlog .maxwidth32 {
@@ -59,4 +58,9 @@ i.fa {
     transform: rotate(-45deg);
     padding:0 15px 0 0;
 }
-
+.page-epics .filteradv label:after{
+    content:'SELECT * FROM epic ';
+}
+.page-backlog .filteradv label:after{
+    content:'SELECT * FROM tasks ';
+}

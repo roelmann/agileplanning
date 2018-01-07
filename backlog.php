@@ -27,132 +27,36 @@ include('includes/navbar.php');
 require_once("dbcontroller.php");
 $table = 'task'; // Main table.
 $db_handle = new DBController(); // Set up database connection.
-// Systems list for drop downs.
-$sql2 = "SELECT * from system";
-$systems = $db_handle->runQuery($sql2);
-// Epics list for drop downs.
-$sql3 = "SELECT * from epic";
-$epics = $db_handle->runQuery($sql3);
-// User stories - separate from main backlog list for drop down list purposes.
-$sql4 = "SELECT * from " . $table . " WHERE type='UserStory'";
-$userstories = $db_handle->runQuery($sql4);
 ?>
 
 <!-- Header Title -->
 <header class="pageheader jumbotron text-center">
     <h1 class="display-5">Backlog</h1>
+    <button class="btn btn-primary" data-toggle="collapse" data-target="#filtercontrols"><i class="fa fa-filter">&nbsp;</i>Filters</button>
 </header>
-
-    <!-- Filter controls Form -->
-    <div class="filtercontrols container">
-        <form action="" method="post">
-            <div class="row">
-                <!-- Filter by dropdown -->
-                <div class="filterby col">
-                    <label><strong>Filter by: </strong></label>
-                    <br>
-                    <select name="filterby">
-                        <option value="all">All</option>
-                        <option value="epicid">Epic</option>
-                        <option value="parent">User Story</option>
-                        <option value="progress">Progress</option>
-                    </select>
-                </div>
-                <!-- Epic dropdown list -->
-                <div class="filterbyepic col">
-                    <label><strong>Epic:</strong></label>
-                    <br>
-                        <select name="epicid">
-                        <option value="all">All</option>
-                        <?php foreach ($epics as $e) { ?>
-                            <option value="<?php echo $e['id'];?>"> <?php echo $e['id'].':'.$e['title'];?> </option>
-                        <?php } ?>
-                        </select>
-                </div>
-                <!-- Parent id dropdown -->
-                <div class="filterbyparent col">
-                    <label><strong>Parent US:</strong></label>
-                    <br>
-                        <select name="parent">
-                            <option value=0>No Parent UserStory</option> <!-- No user story -->
-                        <!-- Drop down of existing user stories -->
-                            <?php foreach ($userstories as $b) { ?>
-                                <option value="<?php echo $b['id'];?>"> <?php echo $b['id'].':'.$b['title'];?> </option>
-                            <?php } ?>
-                        </select>
-                </div>
-                <!-- Progress drop down -->
-                <div class="filterbyprogress col">
-                    <label><strong>Progress:</strong></label>
-                    <br>
-                        <select name="completion">
-                            <option value="all">All</option>
-                            <option value="ToDo">To Do</option>
-                            <option value="InDev">In Development</option>
-                            <option value="InDevTest">Inhouse Testing</option>
-                            <option value="inprogress">All active</option>
-                            <option value="InUserTest">Released - User Testing</option>
-                            <option value="Released">Released - Live</option>
-                            <option value="completed">All completed</option>
-                        </select>
-                </div>
-                <!-- Order by option -->
-                <div class="orderby col-2">
-                    <label><strong>Order by: </strong></label>
-                    <br>
-                    <select name="orderby">
-                        <option value="id">ID</option>
-                        <option value="businessvalue">Business Value</option>
-                        <option value="epicid">Epic</option>
-                        <option value="parent">User Story</option>
-                        <option value="deadline">Deadline</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <!-- Advanced manual filter -->
-                <div class="filteradv col-10">
-                    <label><strong>Advanced: </strong></label>
-                    <input type="text" name="advancedfilter">
-                </div>
-                <!-- Submit button -->
-                <div class="submitbutton col-1">
-                    <input type="submit" value="Go">
-                </div>
-            </div>
-        </form>
         <?php
+        $orderby=array('id','businessvalue','epicid','parent','deadline');
+        echo filtercontrols($db_handle, $bydate = FALSE, $bydev = FALSE, $byprog = TRUE, $byepic = TRUE, $byus = TRUE, $byadv = TRUE, $orderby);
+
         // Process form.
         // If advanced filter set, this overrides others.
         if (isset($_POST['advancedfilter']) && $_POST['advancedfilter'] !== '') {
             $conditioninput = $_POST['advancedfilter'];
-            $conditioninputlist = explode($conditioninput,';');
-            $condition = $conditioninputlist[0];
-        } else {
-            // Filter dropdowns.
-            if (isset($_POST['filterby'])) {
-                if ($_POST['filterby'] == 'none') { // If no filter dropdown.
-                    $filterby = "  ";
-                } elseif ($_POST['filterby'] == 'epicid') { // If filter by epic.
-                    $filterby = " WHERE epicid=".$_POST['epicid'];
-                } elseif ($_POST['filterby'] == 'parent') { // If filter by parent.
-                    $filterby = " WHERE parent=".$_POST['parent'];
-                } elseif ($_POST['filterby'] == 'progress') { // If filter by progress.
-                    if ($_POST['progress'] == 'all') { // Default.
-                        $filterby = "";
-                    } elseif ($_POST['progress'] == 'inprogress') { // Set various in progress terms.
-                        $filterby = " WHERE progress='ToDo' OR progress='InDev' OR progress='InDevTest'";
-                    } elseif ($_POST['progress'] == 'completed') { // Set various completed terms.
-                        $filterby = " WHERE progress='Released' OR progress='InUserTest'";
-                    } else {
-                        $filterby = " WHERE progress='".$_POST['progress']."'"; // Set other option from dropdown.
-                    }
-                } else {
-                    $filterby = ""; // Catch-all default.
-                }
+            if (strpos($conditioninput,';')) {
+                $conditioninputlist = explode($conditioninput,';');
+                $condition = $conditioninputlist[0];
             } else {
-                $filterby = ""; // Catch-all default.
+                $condition = $conditioninput;
             }
+        } else {
+            // Tasks.
+            $fepic = $fpar = $fcom = '';
+
+            if (isset($_POST['epic'])) {$fepic = $_POST['epic'];}
+            if (isset($_POST['parent'])) {$fpar = $_POST['parent'];}
+            if (isset($_POST['completion'])) {$fcom = $_POST['completion'];}
+            $filterby = filterprocess_tasks ($db_handle, $fepic, $fpar, $fcom);
+
             // Order by dropdown.
             if (isset($_POST['orderby'])) {
                 $orderby = $_POST['orderby'];
@@ -162,7 +66,7 @@ $userstories = $db_handle->runQuery($sql4);
             $condition = $filterby . " ORDER BY " . $orderby; // Set search condition.
         }
         // Open database connection.
-        $sql = "SELECT * from " . $table . " " . $condition;
+        $sql = "SELECT * from " . $table . " WHERE id>0 " . $condition;
         echo '<div class="row alert alert-dark">'.$sql.'</div>';
         // Ensure there are rows to report from search.
         if ($db_handle->numRows($sql) < 1 ) {

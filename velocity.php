@@ -26,6 +26,7 @@ include('includes/navbar.php');
 require_once("dbcontroller.php");
 $table = $tbl_vel;
 $db_handle = new DBController();
+$orderby = array();
 ?>
 
 <header class="pageheader jumbotron text-center">
@@ -33,7 +34,7 @@ $db_handle = new DBController();
     <button class="btn btn-primary" data-toggle="collapse" data-target="#filtercontrols"><i class="fa fa-filter">&nbsp;</i>Filters</button>
 </header>
     <?php
-    echo filtercontrols($db_handle, $bydate = TRUE, $bydev = TRUE, $byprog = FALSE, $byepic = FALSE, $byus = FALSE, $byadv = FALSE);
+    echo filtercontrols($db_handle, $bydate = TRUE, $bydev = TRUE, $byprog = FALSE, $byepic = FALSE, $byus = FALSE, $byadv = FALSE, $orderby);
     // Get filters for weeks for top of table.
     $fsd = $fed = $fspr = $fdev = '';
     if (isset($_POST['startdate'])) {$fsd = $_POST['startdate'];}
