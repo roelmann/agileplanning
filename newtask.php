@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
 
     // Get form data, making sure it is valid.
     $type = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['type']));
-    $epicid = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['epicid']));
+    $epicid = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['epic']));
     $parent = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['parent']));
     $title = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['title']));
     $completion = mysqli_real_escape_string($db_handle->conn, htmlspecialchars($_POST['completion']));

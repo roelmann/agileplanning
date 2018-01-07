@@ -66,6 +66,20 @@ ini_set("display_errors", 1);
                 });
             }
         </script>
+        <script type="text/javascript">
+            function fetch_selectnew(val) {
+                $.ajax({
+                    type: 'post',
+                    url: 'fetchernew.php',
+                    data: {
+                        epicid:val
+                    },
+                    success: function (response) {
+                        document.getElementById("taskselectnew").innerHTML=response;
+                    }
+                });
+            }
+        </script>
 
         <!--Bootswatch -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/4.0.0-beta.2/spacelab/bootstrap.min.css">

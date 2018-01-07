@@ -146,17 +146,22 @@ $db_handle = new DBController(); // Set up database connection.
                 <?php
                 }
                 ?>
+                </tbody>
+            </table>
+            <table>
                 <!-- New task/user story form -->
+                <thead>
                 <tr>
                     <th colspan=15>Add a new Task or User Story</th>
                 </tr>
-                <form action="newtask.php?t=task" method="post">
+                </thead>
+                <tbody>
+                <form action="newtask.php?t=task" method="post" class="newtaskform">
                     <tr class="table-row">
-                        <!-- Submit button -->
-                        <td>
-                            <input type="submit" name="submit" value="&#xf0c7;" class="fa">
-                        </td>
                         <!-- Type -->
+                        <td>
+                            <label>Select Type: </label>
+                        </td>
                         <td>
                             <select name="type">
                                 <option value="UserStory">User Story</option>
@@ -164,28 +169,54 @@ $db_handle = new DBController(); // Set up database connection.
                                 <option value="SubTask">Sub-Task</option>
                             </select>
                         </td>
+                    </tr>
+                    <tr class="table-row">
                         <!-- Epic ID -->
                         <td>
-                            <select name="epicid"> <!-- Epics drop down list -->
-                            <?php foreach ($epics as $e) { ?>
+                            <label>Select Epic: </label>
+                        </td>
+                        <td>
+                            <select onload="fetch_selectnew(all);" onchange="fetch_selectnew(this.value);" name="epic"> <!-- Epics drop down list -->
+                            <?php
+                            if (isset($fepic) && $fepic !== '' && $fepic !=='all') {
+                                $filtepic = " WHERE id = ".$fepic;
+                            } else {
+                                $filtepic = "";
+                            }
+                            $epiclistsql = "SELECT * FROM epic ".$filtepic;
+                            $epics = $db_handle->runQuery($epiclistsql);
+                            echo '<option selected>Select Epic</option>';
+                            foreach ($epics as $e) { ?>
                                 <option value="<?php echo $e['id'];?>"> <?php echo $e['id'].':'.$e['title'];?> </option>
                             <?php } ?>
                             </select>
                         </td>
+                    </tr>
+                    <tr class="table-row">
                         <!-- Parent -->
                         <td>
-                            <select name="parent"> <!-- Parent drop down list -->
-                                <option value=0>No Parent UserStory</option>
-                                <?php foreach ($userstories as $b) { ?>
-                                    <option value="<?php echo $b['id'];?>"> <?php echo $b['id'].':'.$b['title'];?> </option>
-                                <?php } ?>
+                            <label>Select parent user story: </label>
+                        </td>
+                        <td>
+                            <select id="taskselectnew" name="parent">
+                                <option value="0">No parent (this is a U/S)</option>
                             </select>
                         </td>
+                    </tr>
+                    <tr class="table-row">
                         <!-- Title -->
                         <td>
-                            <input type="text" name="title" value="" />
+                            <label>Title: </label>
                         </td>
+                        <td>
+                            <input type="text" name="title" value="" style="width:550px;"/>
+                        </td>
+                    </tr>
+                    <tr class="table-row">
                         <!-- Progress -->
+                        <td>
+                            <label>Progress: </label>
+                        </td>
                         <td>
                             <select name="completion">
                                 <option value="ToDo">ToDo: To Do</option>
@@ -195,29 +226,64 @@ $db_handle = new DBController(); // Set up database connection.
                                 <option value="Released">Released: Live</option>
                             </select>
                         </td>
+                    </tr>
+                    <tr class="table-row">
                         <!-- Description -->
                         <td>
-                            <textarea name="description" rows="5" cols="30"> </textarea>
+                            <label>Description: </label>
                         </td>
+                        <td>
+                            <textarea name="description" rows="5" cols="60"> </textarea>
+                        </td>
+                    </tr>
+                    <tr class="table-row">
                         <!-- Deadline -->
                         <td>
-                            <input type="text" name="deadline" value="" class="maxwidth100"/>
+                            <label>Deadline (yyyy-mm-dd): </label>
                         </td>
+                        <td>
+                            <input type="text" name="deadline" value=""/>
+                        </td>
+                    </tr>
+                    <tr class="table-row">
                         <!-- Notes -->
                         <td>
-                            <textarea name="notes" rows="5" cols="20"> </textarea>
+                            <label>Notes: </label>
                         </td>
+                        <td>
+                            <textarea name="notes" rows="5" cols="40"> </textarea>
+                        </td>
+                    </tr>
+                    <tr class="table-row">
                         <!-- Business Value -->
-                        <td colspan=6>
-                            <input type="text" name="MoSCoW" value="" maxlength="2" class="maxwidth28"/>
-                            <input type="text" name="Releasability" value="" maxlength="2" class="maxwidth28"/>
-                            <input type="text" name="Risk" value="" maxlength="2" class="maxwidth28"/>
-                            <input type="text" name="DependenciesUpstream" value="" maxlength="2" class="maxwidth28"/>
-                            <input type="text" name="DependenciesDownstream" value="" maxlength="2" class="maxwidth28"/>&nbsp;<input type="submit" name="submit" value="&#xf0c7;" class="fa">
+                        <td>
+                            <label>Business Value: <br>(Total calculated automatically)</label>
+                        </td>
+                        <td>
+                            <label>MoSCoW:</label>
+                            <input type="text" name="MoSCoW" value="" maxlength="2"/>
+                            <label>Releasability:</label>
+                            <input type="text" name="Releasability" value="" maxlength="2"/>
+                            <label>Risk:</label>
+                            <input type="text" name="Risk" value="" maxlength="2"/>
+                            <br>
+                            <label>Upstream dependencies (-)</label>
+                            <input type="text" name="DependenciesUpstream" value="" maxlength="2"/>
+                            <label>Downstream dependencies</label>
+                            <input type="text" name="DependenciesDownstream" value="" maxlength="2"/>
+                        </td>
+                    </tr>
+                    <tr class="table-row">
+                        <td>
+                            <input type="submit" name="submit" value="&#xf0c7;" class="fa">
+                        </td>
+                    </tr>
+                    <tr> <!-- Spacer row -->
+                        <td colspan=15>
+                            <br><br>
                         </td>
                     </tr>
                 </form>
-
             </tbody>
         </table>
     </div>
