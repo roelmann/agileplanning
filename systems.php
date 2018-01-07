@@ -38,7 +38,7 @@ $sys = $db_handle->runQuery($sql);
 
     <!-- Main page content -->
     <div class="main-content">
-        <table class="table table-striped">
+        <table class="table table-striped sticky-header">
             <!-- Table header row -->
             <thead class="thead-dark">
                 <tr>

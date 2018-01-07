@@ -82,7 +82,7 @@ $db_handle = new DBController(); // Set up database connection.
 
     <!-- Main page content -->
     <div class="main-content">
-        <table class="table table-striped">
+        <table class="table table-striped sticky-header">
             <!-- Table header row -->
             <thead class="thead-dark sticky-top">
                 <tr>

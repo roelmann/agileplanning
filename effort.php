@@ -68,7 +68,7 @@ $orderby = array();
     $tasknamelist = taskslist ($db_handle, $tbl_eff, $tbl_bklg, $filtertasks);    ?>
 
     <div class="main-content">
-        <table class="table table-striped">
+        <table class="table table-striped sticky-header">
             <thead class="thead-dark">
                 <tr>
                     <th class="table-header" colspan=2>Week Commencing</th>

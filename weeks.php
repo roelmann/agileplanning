@@ -37,7 +37,7 @@ $week = $db_handle->runQuery($sql);
 </header>
 
     <!-- Main page content -->
-    <div class="main-content floatThead-container">
+    <div class="main-content">
         <table class="table table-striped sticky-header">
             <thead class="thead-dark">
                 <tr>

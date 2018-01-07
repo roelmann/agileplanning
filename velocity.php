@@ -62,7 +62,7 @@ $orderby = array();
     ?>
 
     <div class="main-content">
-        <table class="table table-striped">
+        <table class="table table-striped sticky-header">
             <thead class="thead-dark">
                 <tr>
                     <th class="table-header">Week Commencing</th>
