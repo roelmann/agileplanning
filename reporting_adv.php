@@ -77,7 +77,7 @@ $orderby = array();
     ?>
 
     <div class="main-content">
-        <table class="table table-striped">
+        <table class="table table-striped datatable floatThead-table">
             <thead class="thead-dark">
                 <tr>
                     <th class="table-header" style="height:85px" colspan=2>Week Commencing</th>
