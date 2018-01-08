@@ -77,4 +77,4 @@ ini_set("display_errors", 1);
     </ul>
   </div>
 </nav>
-<p class="alert alert-danger" style="margin-top:60px"><strong>THIS IS BETA FOR TESTING, COMMENT AND FURTHER DEVELOPMENT</strong><br>Tested in Chrome<br>Unknown Bug in Firefox means contenteditable tables are unreliable for integer values (treating as string and preventing database save???)<br>Untested in IE</p>
+<p class="alert alert-danger" style="margin-top:60px"><strong>THIS IS BETA FOR TESTING, COMMENT AND FURTHER DEVELOPMENT</strong><br>Tested in Chrome<br>Unknown Bug in Firefox means contenteditable tables are unreliable for integer values (treating as string and preventing database save???)<br>Untested in IE, but known bug in IE means ContentEditable is not supported in tables and will need to be reworked</p>
