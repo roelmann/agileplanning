@@ -129,46 +129,91 @@ $db_handle = new DBController(); // Set up database connection.
                 <?php
                 }
                 ?>
+            </tbody>
+        </table>
+        <table>
+            <thead>
                 <!-- New Epic form -->
                 <tr>
                     <th colspan=7>Add a new Epic</th>
                 </tr>
+            </thead>
+            <tbody>
                 <form action="newepic.php?t=epic" method="post">
                     <tr class="table-row">
-                        <td>
-                            <input type="submit" name="submit" value="&#xf0c7;" class="fa">
-                        </td>
                         <!-- System -->
-                        <td>*
+                        <td>
+                            <?php
+                            $syslistsql = "SELECT * FROM system";
+                            $systems = $db_handle->runQuery($syslistsql);
+                            ?>
+                            <label>System*: </label>
+                        </td>
+                        <td>
                             <select name="systemid">
                                 <?php foreach ($systems as $sys) { ?> <!-- Systems drop down -->
                                     <option value="<?php echo $sys['id'];?>"> <?php echo $sys['system'];?> </option>
                                 <?php } ?>
                             </select>
                         </td>
+                    </tr>
+                    <tr>
                         <!-- Title -->
-                        <td>*
+                        <td>
+                            <label>Title*: </label>
+                        </td>
+                        <td>
                             <input type="text" name="title" value="" />
                         </td>
+                    </tr>
+                    <tr>
                         <!-- Description -->
+                        <td>
+                            <label>Description: </label>
+                        </td>
                         <td>
                             <textarea name="description" rows="5" cols="30"> </textarea>
                         </td>
+                    </tr>
+                    <tr>
                         <!-- Deadline date -->
-                        <td>*
+                        <td>
+                            <label>Deadline*:</label>
+                        </td>
+                        <td>
                             <input type="date" name="deadline" />
                         </td>
+                    </tr>
+                    <tr>
                         <!-- Notes -->
+                        <td>
+                            <label>Notes:</label>
+                        </td>
                         <td>
                             <textarea name="notes" rows="5" cols="20"> </textarea>
                         </td>
+                    </tr>
+                    <tr>
                         <!-- Fontawesome Icon -->
                         <td>
+                            <label>Icon name:</label>
+                        </td>
+                        <td>
                             <input type="text" name="icon" value="" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <!-- Submit button -->
                             <input type="submit" name="submit" value="&#xf0c7;" class="fa">
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan=7> <!-- Spacer row -->
+                            <p><br><br></p>
+                        </td>
+                    </tr>
+
                 </form>
 
             </tbody>

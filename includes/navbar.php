@@ -59,13 +59,21 @@ ini_set("display_errors", 1);
           <a class="dropdown-item" href="reporting_bydeveloper.php">Total effort by developer</a>
           <a class="dropdown-item" href="reporting_adv.php">Advanced filters</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Other reporting to be created as required</a>>
+          <a class="dropdown-item" href="#">Other reporting to be created as required</a>
 
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="https://github.com/roelmann/agileplanning/issues">TO-DO</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          About
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Agile Planner: Developed by Richard Oelmann<br>Copyright R.Oelmann 2018<br>Released under GNU/GPLv3</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="https://github.com/roelmann/agileplanning/issues">ToDo/Issues - GitHub</a>
+        </div>
       </li>
+
     </ul>
   </div>
 </nav>
